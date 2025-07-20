@@ -1,26 +1,42 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HeroSection from './components/Sections/HeroSection';
-import ButtonsSection from './components/Sections/ButtonSection';
+import { useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardPage from './pages/DashboardPage';
+import AuthPage from './pages/AuthPage';
+import SlugPage from './pages/SlugPage';
 import UploadPage from './pages/UploadPage';
-import GalleryPage from './pages/GalleryPage';
 import MessagePage from './pages/MessagePage';
+import VideoPage from './pages/VideoPage';
 
 function App() {
+  const { user } = useAuth();
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          <>
-            <HeroSection />
-            <ButtonsSection />
-          </>
-        } />
-        <Route path="/upload" element={<UploadPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/message" element={<MessagePage />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/auth" element={<AuthPage />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <>
+                  <DashboardPage />
+                </>
+              </ProtectedRoute>
+            }
+          />
+
+        <Route path="/u/:userId/:slug" element={<SlugPage />} />
+        <Route path="/u/:userId/:slug/photos" element={<UploadPage />} />
+        <Route path="/u/:userId/:slug/messages" element={<MessagePage />} />
+        <Route path="/u/:userId/:slug/video" element={<VideoPage />} />
+
+        </Routes>
+      </Router>
+    </>
   );
 }
 

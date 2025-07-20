@@ -5,7 +5,8 @@ module.exports = {
 fontFamily: {
   romantic: ["'Great Vibes'", "cursive"],
   elegant: ["'Playfair Display'", "serif"],
-},
+  sans: ["ui-sans-serif", "system-ui"],
+}
     },
   },
   plugins: [],
