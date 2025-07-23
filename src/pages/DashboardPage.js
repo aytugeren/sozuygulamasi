@@ -9,8 +9,10 @@ import {
   doc,
   setDoc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  getDoc
 } from 'firebase/firestore';
+import {toast} from 'react-toastify';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -29,6 +31,8 @@ const DashboardPage = () => {
   const [altFont, setAltFont] = useState('sans');
   const [altColor, setAltColor] = useState('#888888');
   const [videoLink, setVideoLink] = useState('');
+  const [slugExists, setSlugExists] = useState(false);
+  const [slugMessage, setSlugMessage] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -61,6 +65,13 @@ const DashboardPage = () => {
   const handleSave = async () => {
     if (!slug) return;
 
+    createSlug(true,slug);
+
+    if (slugExists) {
+      toast.error(slugMessage);
+      return;
+    }
+
     await setDoc(doc(db, 'users', user.uid), { initialized: true }, { merge: true });
     
     const pageRef = doc(db, 'users', user.uid, 'pages', slug);
@@ -79,6 +90,7 @@ const DashboardPage = () => {
       createdAt: new Date(),
     });
 
+    createSlug(false, slug);
     await fetchUserPages();
     setSlug('');
     setTitle('');
@@ -91,6 +103,33 @@ const DashboardPage = () => {
     navigate('/auth');
   };
 
+  const createSlug = async (isForCheck, value) => {
+    if (!value) return;
+    const slugRef = doc(db, 'slugs', value);
+    const slugSnap = await getDoc(slugRef);
+
+    if (slugSnap.exists()) {
+      setSlugExists(true);
+      setSlugMessage('Bu slug zaten kullanılıyor. Lütfen farklı bir slug girin.');
+      return false;
+    }
+
+    if (value.length < 3 || value.length > 20) {
+      setSlugExists(true);
+      setSlugMessage('Slug 3-20 karakter arasında olmalıdır.');
+      return false;  
+    }
+
+    if (!isForCheck) {
+      await setDoc(slugRef, { userId: user.uid });
+      return true;
+    }
+
+    setSlugExists(false);
+    setSlugMessage('Bu slug kullanılabilir.');
+    return true;
+  }
+
   if (loading) return <div className="text-center p-10">Yükleniyor...</div>;
 
   return (
@@ -100,18 +139,24 @@ const DashboardPage = () => {
         <p className="text-sm text-center text-gray-500">Hoş geldiniz: {user.email}</p>
 
         <div>
-          <label className="block text-gray-700 mb-1">🔗 Sayfa Linki (slug)</label>
+          <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
           <input
             type="text"
             value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            onChange={async (e) => {
+              setSlug(e.target.value);
+              await createSlug(true, e.target.value);
+            }}
             className="w-full border rounded px-4 py-2"
             placeholder="örnek: burcufatihsoz"
           />
+            {slugExists && (
+              <p className="text-red-600 text-sm mt-1">{slugMessage}</p>
+            )}
         </div>
 
         <div>
-          <label className="block mb-1">💑 Çift İsmi (başlık)</label>
+          <label className="block mb-1">💑 Çift İsmi</label>
           <input
             type="text"
             value={title}
@@ -136,7 +181,7 @@ const DashboardPage = () => {
         </div>
 
         <div>
-          <label className="block mb-1">💬 Alt Mesaj (subtitle)</label>
+          <label className="block mb-1">💬 Alt Mesaj</label>
           <input
             type="text"
             value={subtitle}
@@ -219,7 +264,7 @@ const DashboardPage = () => {
               <span>🔗 {p.slug}</span>
               <div className="flex items-center gap-2">
                 <a
-                  href={`/u/${user.uid}/${p.slug}`}
+                  href={`/${p.slug}`}
                   className="text-blue-600 underline text-sm"
                   target="_blank"
                   rel="noreferrer"

@@ -2,14 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../databases/firebase';
-import {
-  collection,
-  getDocs,
-  addDoc,
-  query,
-  orderBy,
-  Timestamp,
-} from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
+
 
 const emojis = ['😊', '🎉', '💖', '🥳', '🙏', '🎈', '🌟'];
 
@@ -24,68 +18,61 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState(null);
 
-  useEffect(() => {
-    const findUserIdBySlug = async () => {
-      const usersSnapshot = await getDocs(collection(db, 'users'));
+useEffect(() => {
+  const fetchUserId = async () => {
+    if (!slug) return;
+    const slugRef = doc(db, 'slugs', slug);
+    const slugSnap = await getDoc(slugRef);
+    if (slugSnap.exists()) {
+      setUserId(slugSnap.data().userId);
+    }
+  };
+  fetchUserId();
+}, [slug]);
 
-      for (const userDoc of usersSnapshot.docs) {
-        const pagesRef = collection(db, 'users', userDoc.id, 'pages');
-        const pagesSnapshot = await getDocs(pagesRef);
+useEffect(() => {
+  if (userId) fetchMessages();
+}, [userId]);
 
-        for (const pageDoc of pagesSnapshot.docs) {
-          if (pageDoc.id === slug) {
-            setUserId(userDoc.id);
-            return;
-          }
-        }
-      }
-    };
-
-    findUserIdBySlug();
-  }, [slug]);
-
-  useEffect(() => {
-    if (userId) fetchMessages();
-  }, [userId]);
-
-  const fetchMessages = async () => {
-    try {
+const fetchMessages = async () => {
+  try {
+    if (userId && slug) {
       const q = query(
-        collection(db, 'messages', userId, slug, 'entries'),
+        collection(db, 'users', userId, 'pages', slug, 'messages'),
         orderBy('createdAt', 'desc')
       );
       const snapshot = await getDocs(q);
       const list = snapshot.docs.map(doc => doc.data());
       setMessages(list);
-    } catch (error) {
-      console.error('Mesajlar alınamadı:', error);
     }
-  };
+  } catch (error) {
+    console.error('Mesajlar alınamadı:', error);
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!message.trim() || !userId) return;
-    setLoading(true);
-
-    try {
-      await addDoc(collection(db, 'messages', userId, slug, 'entries'), {
-        name: name.trim() || '🧑 Misafir',
-        message: message.trim(),
-        emoji,
-        createdAt: Timestamp.now(),
-      });
-      setSent(true);
-      setMessage('');
-      setName('');
-      setEmoji('');
-      fetchMessages();
-    } catch (error) {
-      alert('Mesaj kaydedilirken bir hata oluştu.');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!message.trim() || !userId) return;
+  setLoading(true);
+  try {
+    await addDoc(collection(db, 'users', userId, 'pages', slug, 'messages'), {
+      name: name.trim() || '🧑 Misafir',
+      message: message.trim(),
+      emoji,
+      createdAt: Timestamp.now(),
+    });
+    setSent(true);
+    setMessage('');
+    setName('');
+    setEmoji('');
+    fetchMessages();
+  } catch (error) {
+    alert('Mesaj kaydedilirken bir hata oluştu.');
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white px-4 py-10">

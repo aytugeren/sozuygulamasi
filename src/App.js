@@ -29,10 +29,10 @@ function App() {
             }
           />
 
-        <Route path="/u/:userId/:slug" element={<SlugPage />} />
-        <Route path="/u/:userId/:slug/photos" element={<UploadPage />} />
-        <Route path="/u/:userId/:slug/messages" element={<MessagePage />} />
-        <Route path="/u/:userId/:slug/video" element={<VideoPage />} />
+        <Route path="/:slug" element={<SlugPage />} />
+        <Route path="/:slug/photos" element={<UploadPage />} />
+        <Route path="/:slug/messages" element={<MessagePage />} />
+        <Route path="/:slug/video" element={<VideoPage />} />
 
         </Routes>
       </Router>
