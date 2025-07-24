@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../databases/firebase';
 import { useNavigate } from 'react-router-dom';
+import QRCode from "react-qr-code";
+import { toPng } from 'html-to-image';
 import {
   collection,
   getDocs,
@@ -33,6 +35,12 @@ const DashboardPage = () => {
   const [videoLink, setVideoLink] = useState('');
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [qrValue, setQrValue] = useState('');
+
+const qrRef = useRef(null);
+const invalidSlugRegex = /[^a-zA-Z-]/;
+
 
   useEffect(() => {
     if (user) {
@@ -51,14 +59,29 @@ const DashboardPage = () => {
     setPages(pagesList);
   };
 
-  const handleDelete = async (slugToDelete) => {
+const deleteCollection = async (collectionRef) => {
+  if (!collectionRef) return;
+  const snapshot = await getDocs(collectionRef);
+  const promises = snapshot.docs.map(docItem => deleteDoc(docItem.ref));
+  await Promise.all(promises);
+};
+
+ const handleDelete = async (slugToDelete) => {
+  if (!user || !user.uid || !slugToDelete) {
+    toast.error("Silme işlemi için kullanıcı ve slug bilgisi gerekli!");
+    return;
+  }
   const confirmed = window.confirm(`"${slugToDelete}" sayfasını silmek istediğinizden emin misiniz?`);
   if (!confirmed) return;
 
   const pageRef = doc(db, 'users', user.uid, 'pages', slugToDelete);
-  await deleteDoc(pageRef);
+  const slugRef = doc(db, 'slugs', slugToDelete);
+  const messagesRef = collection(db, 'users', user.uid, 'pages', slugToDelete, 'messages');
 
-  // Listeyi güncelle
+  await deleteCollection(messagesRef);
+  await deleteDoc(pageRef);
+  await deleteDoc(slugRef);
+
   await fetchUserPages();
 };
 
@@ -113,6 +136,12 @@ const DashboardPage = () => {
       setSlugMessage('Bu slug zaten kullanılıyor. Lütfen farklı bir slug girin.');
       return false;
     }
+
+  if (invalidSlugRegex.test(value)) {
+    setSlugExists(true);
+    setSlugMessage('Slug sadece İngilizce harf ve tire (-) içerebilir. Türkçe karakter, sayı ve özel karakter kullanılamaz.');
+    return false;
+  }
 
     if (value.length < 3 || value.length > 20) {
       setSlugExists(true);
@@ -273,6 +302,15 @@ const DashboardPage = () => {
                 </a>
                 <button
                   onClick={() => {
+                    setQrValue(`${window.location.origin}/${p.slug}`);
+                    setQrModalOpen(true);
+                  }}
+                  className="text-green-600 text-sm hover:underline"
+                >
+                  QR Kod Oluştur
+                </button>
+                <button
+                  onClick={() => {
                     setEditingSlug(p.slug);
                     setAltColor(p.altColor || '#888888');
                     setAltFont(p.altFont || 'sans');
@@ -410,6 +448,43 @@ const DashboardPage = () => {
           </li>
               ))}
             </ul>
+{qrModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 flex flex-col items-center relative">
+      <button
+        onClick={() => setQrModalOpen(false)}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
+      >
+        ×
+      </button>
+      <h2 className="text-lg font-semibold mb-4">QR Kod</h2>
+      <div ref={qrRef} className="bg-white p-4 rounded">
+        <QRCode value={qrValue} size={180} />
+      </div>
+      <a
+        href={qrValue}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-4 text-blue-600 underline"
+      >
+        Linki Aç
+      </a>
+      <button
+        onClick={async () => {
+          if (!qrRef.current) return;
+          const dataUrl = await toPng(qrRef.current);
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = 'qr-kod.png';
+          link.click();
+        }}
+        className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+      >
+        QR'ı PNG Olarak Kaydet
+      </button>
+    </div>
+  </div>
+)}
           </div>
         )}
 

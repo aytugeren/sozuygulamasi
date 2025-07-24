@@ -8,6 +8,8 @@ import SlugPage from './pages/SlugPage';
 import UploadPage from './pages/UploadPage';
 import MessagePage from './pages/MessagePage';
 import VideoPage from './pages/VideoPage';
+import MainPage from './pages/MainPage';
+import ProCheckout from './pages/ProCheckout';
 
 function App() {
   const { user } = useAuth();
@@ -16,6 +18,8 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route path='/' element={<MainPage />} />
+
           <Route path="/auth" element={<AuthPage />} />
 
           <Route
@@ -28,7 +32,11 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route
+            path="/pro-odeme"
+            element={
+                <ProCheckout />
+            }></Route>
         <Route path="/:slug" element={<SlugPage />} />
         <Route path="/:slug/photos" element={<UploadPage />} />
         <Route path="/:slug/messages" element={<MessagePage />} />
