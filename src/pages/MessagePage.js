@@ -18,6 +18,14 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState(null);
   const [liveMode, setLiveMode] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+const messagesPerPage = 5;
+
+const totalPages = Math.ceil(messages.length / messagesPerPage);
+const paginatedMessages = messages.slice(
+  (currentPage - 1) * messagesPerPage,
+  currentPage * messagesPerPage
+);
 
 useEffect(() => {
   const fetchUserId = async () => {
@@ -68,6 +76,19 @@ useEffect(() => {
     return () => document.removeEventListener('fullscreenchange', exitHandler);
   }, []);
 
+useEffect(() => {
+  let interval;
+  if (liveMode && userId) {
+    // Her 3 saniyede bir mesajları güncelle
+    interval = setInterval(() => {
+      fetchMessages();
+    }, 3000);
+  }
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [liveMode, userId, fetchMessages]);
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   if (!message.trim() || !userId) return;
@@ -115,18 +136,21 @@ if (liveMode) {
         <span className="text-base text-gray-500 mt-1">En özel gününüzü dijitale taşıyın!</span>
       </div>
       <h1 className="text-4xl font-bold text-pink-400 mb-8">💌 Canlı Dilekler</h1>
-      <div className="w-full max-w-2xl px-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`bg-white bg-opacity-80 border border-pink-100 rounded-2xl p-6 mb-6 text-center shadow-lg text-2xl ${animatedMessageClass}`}
-            style={{ animationDelay: `${index * 0.2}s` }}
-          >
-            <span className="font-bold text-pink-500">{msg.name} {msg.emoji}</span>
-            <div className="mt-2 text-gray-800">{msg.message}</div>
-          </div>
-        ))}
-      </div>
+<div className="w-full max-w-2xl px-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
+  {messages.slice(0, 4).map((msg, index) => (
+    <div
+      key={index}
+      className={`bg-white bg-opacity-80 border border-pink-100 rounded-2xl p-6 mb-6 text-center shadow-lg text-2xl ${animatedMessageClass}`}
+      style={{
+        animationDelay: `${index * 0.2}s`,
+        animationDuration: '1.5s',
+      }}
+    >
+      <span className="font-bold text-pink-500">{msg.name} {msg.emoji}</span>
+      <div className="mt-2 text-gray-800">{msg.message}</div>
+    </div>
+  ))}
+</div>
     </div>
   );
 }
@@ -195,15 +219,34 @@ if (liveMode) {
 
       <div className="w-full max-w-2xl mt-10">
         <h2 className="text-xl font-semibold mb-2 text-left">📜 Dilekler ({messages.length})</h2>
-        <div className="space-y-4">
-          {messages.map((msg, index) => (
-            <div key={index} className="bg-gray-100 border border-gray-300 rounded-lg p-4 text-left shadow">
-              <p className="text-sm text-gray-800 mb-1 font-semibold">💬 {msg.name} {msg.emoji}</p>
-              <p className="text-gray-700 whitespace-pre-line">{msg.message}</p>
-            </div>
-          ))}
-        </div>
+    <div className="space-y-4">
+        {paginatedMessages.map((msg, index) => (
+          <div key={index} className="bg-gray-100 border border-gray-300 rounded-lg p-4 text-left shadow">
+            <p className="text-sm text-gray-800 mb-1 font-semibold">💬 {msg.name} {msg.emoji}</p>
+            <p className="text-gray-700 whitespace-pre-line">{msg.message}</p>
+          </div>
+        ))}
       </div>
+      </div>
+            {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded bg-pink-100 text-pink-700 disabled:opacity-50"
+          >
+            ← Önceki
+          </button>
+          <span className="font-semibold">{currentPage} / {totalPages}</span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded bg-pink-100 text-pink-700 disabled:opacity-50"
+          >
+            Sonraki →
+          </button>
+        </div>
+      )}
     </div>
   );
 };
