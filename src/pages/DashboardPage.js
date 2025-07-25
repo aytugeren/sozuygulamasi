@@ -458,7 +458,14 @@ const deleteCollection = async (collectionRef) => {
         ×
       </button>
       <h2 className="text-lg font-semibold mb-4">QR Kod</h2>
-      <div ref={qrRef} className="bg-white p-4 rounded">
+      {/* QR kod ve yazı birlikte PNG'ye dahil olacak şekilde bir kapsayıcı div */}
+      <div ref={qrRef} className="bg-white p-4 rounded flex flex-col items-center">
+        <span
+          className="mb-2 text-pink-500 font-bold text-2xl tracking-widest"
+          style={{ fontFamily: "'DM Serif Display', 'Monoton', cursive, serif" }}
+        >
+          DAVETLY
+        </span>
         <QRCode value={qrValue} size={180} />
       </div>
       <a

@@ -5,17 +5,17 @@ const DemoPages = () => {
     {
       name: 'Burcu & Fatih',
       url: '/burcu-fatih',
-      image: '/demo1.png',
+      image: 'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476018/Untitled_design_3_paar4c.png',
     },
     {
       name: 'Elif & Mert',
       url: '/elif-mert',
-      image: '/demo2.png',
+      image: 'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476235/Untitled_design_4_dgcp9t.png',
     },
     {
       name: 'Senin Sayfan',
       url: '/demo',
-      image: '/demo3.png',
+      image: 'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476337/Untitled_design_5_robwmu.png',
     },
   ];
 

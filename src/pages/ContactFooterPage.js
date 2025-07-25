@@ -13,29 +13,29 @@ const ContactFooterPage = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
           {/* E-posta */}
           <a
-            href="mailto:destek@etkinlikpaylas.com"
+            href="mailto:erenevimm@gmail.com"
             className="flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
           >
             <FaEnvelope />
-            destek@etkinlikpaylas.com
+            erenevimm@gmail.com
           </a>
 
           {/* Instagram */}
           <a
-            href="https://instagram.com/etkinlikpaylas"
+            href="https://instagram.com/aytugeren"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
           >
             <FaInstagram />
-            @etkinlikpaylas
+            @aytugeren
           </a>
         </div>
 
         <hr className="border-t border-gray-100 my-6" />
 
         <p className="text-sm text-gray-400">
-          © {new Date().getFullYear()} EtkinlikPaylaş • Tüm hakları saklıdır.
+          © {new Date().getFullYear()} Davetly • Tüm hakları saklıdır.
         </p>
       </div>
     </footer>
