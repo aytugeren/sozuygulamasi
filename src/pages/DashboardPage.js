@@ -462,33 +462,49 @@ const deleteCollection = async (collectionRef) => {
       <div ref={qrRef} className="bg-white p-4 rounded flex flex-col items-center">
         <span
           className="mb-2 text-pink-500 font-bold text-2xl tracking-widest"
-          style={{ fontFamily: "'DM Serif Display', 'Monoton', cursive, serif" }}
+          style={{ fontFamily: "'Playwrite Magyarország'" }}
         >
           DAVETLY
         </span>
         <QRCode value={qrValue} size={180} />
       </div>
-      <a
-        href={qrValue}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-4 text-blue-600 underline"
-      >
-        Linki Aç
-      </a>
-      <button
-        onClick={async () => {
-          if (!qrRef.current) return;
-          const dataUrl = await toPng(qrRef.current);
-          const link = document.createElement('a');
-          link.href = dataUrl;
-          link.download = 'qr-kod.png';
-          link.click();
-        }}
-        className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-      >
-        QR'ı PNG Olarak Kaydet
-      </button>
+<a
+  href={qrValue}
+  target="_blank"
+  rel="noreferrer"
+  className="mt-4 text-blue-600 underline"
+>
+  Linki Aç
+</a>
+<button
+  onClick={async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'Davetly QR',
+        text: 'Davetly sayfamın QR kodunu ve linkini paylaşıyorum!',
+        url: qrValue,
+      });
+    } else {
+      alert('Paylaşım özelliği bu tarayıcıda desteklenmiyor.');
+    }
+  }}
+  className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+>
+  Paylaş
+</button>
+<button
+  onClick={async () => {
+    if (!qrRef.current) return;
+    const dataUrl = await toPng(qrRef.current);
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'qr-kod.png';
+    link.click();
+  }}
+  className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+>
+  QR'ı PNG Olarak Kaydet
+</button>
     </div>
   </div>
 )}
