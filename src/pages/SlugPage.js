@@ -4,14 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../databases/firebase';
 
-const fontMap = {
-  romantic: '"Dancing Script", cursive',
-  elegant: '"Playfair Display", serif',
-  sans: '"Open Sans", sans-serif',
-};
-
 const SlugPage = () => {
-  const { userId, slug } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +18,7 @@ useEffect(() => {
     return;
   }
   const fetchPage = async () => {
+    debugger;
     try {
       // Slug ile sayfa verisini çekiyoruz
       const slugRef = doc(db, 'slugs', slug);

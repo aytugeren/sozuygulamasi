@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../databases/firebase';
@@ -42,14 +42,7 @@ const qrRef = useRef(null);
 const invalidSlugRegex = /[^a-zA-Z-]/;
 
 
-  useEffect(() => {
-    if (user) {
-      fetchUserPages();
-      setLoading(false);
-    }
-  }, [user]);
-
-  const fetchUserPages = async () => {
+  const fetchUserPages = useCallback(async () => {
     const pagesRef = collection(db, 'users', user.uid, 'pages');
     const querySnapshot = await getDocs(pagesRef);
     const pagesList = [];
@@ -57,7 +50,14 @@ const invalidSlugRegex = /[^a-zA-Z-]/;
       pagesList.push(doc.data());
     });
     setPages(pagesList);
-  };
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserPages();
+      setLoading(false);
+    }
+  }, [user, fetchUserPages]);
 
 const deleteCollection = async (collectionRef) => {
   if (!collectionRef) return;

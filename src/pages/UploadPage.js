@@ -1,5 +1,5 @@
 // src/pages/PhotoPage.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../databases/firebase';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
@@ -13,14 +13,14 @@ const PhotoPage = () => {
   const [uploadedCount, setUploadedCount] = useState(0);
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
-  useEffect(() => {
-    fetchUploadedCount();
-  }, []);
-
-  const fetchUploadedCount = async () => {
+  const fetchUploadedCount = useCallback(async () => {
     const snapshot = await getDocs(collection(db, 'photos', slug, 'entries'));
     setUploadedCount(snapshot.size);
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchUploadedCount();
+  }, [fetchUploadedCount]);
 
   const handleChange = (e) => {
     const files = Array.from(e.target.files);

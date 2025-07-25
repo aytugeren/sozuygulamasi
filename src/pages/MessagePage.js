@@ -1,5 +1,5 @@
 // src/pages/MessagePage.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../databases/firebase';
 import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
@@ -30,25 +30,25 @@ useEffect(() => {
   fetchUserId();
 }, [slug]);
 
-useEffect(() => {
-  if (userId) fetchMessages();
-}, [userId]);
-
-const fetchMessages = async () => {
-  try {
-    if (userId && slug) {
-      const q = query(
-        collection(db, 'users', userId, 'pages', slug, 'messages'),
-        orderBy('createdAt', 'desc')
-      );
-      const snapshot = await getDocs(q);
-      const list = snapshot.docs.map(doc => doc.data());
-      setMessages(list);
+  const fetchMessages = useCallback(async () => {
+    try {
+      if (userId && slug) {
+        const q = query(
+          collection(db, 'users', userId, 'pages', slug, 'messages'),
+          orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        const list = snapshot.docs.map(doc => doc.data());
+        setMessages(list);
+      }
+    } catch (error) {
+      console.error('Mesajlar alınamadı:', error);
     }
-  } catch (error) {
-    console.error('Mesajlar alınamadı:', error);
-  }
-};
+  }, [userId, slug]);
+
+  useEffect(() => {
+    if (userId) fetchMessages();
+  }, [userId, fetchMessages]);
 
 const handleSubmit = async (e) => {
   e.preventDefault();

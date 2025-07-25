@@ -1,6 +1,4 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardPage from './pages/DashboardPage';
 import AuthPage from './pages/AuthPage';
@@ -12,7 +10,6 @@ import MainPage from './pages/MainPage';
 import ProCheckout from './pages/ProCheckout';
 
 function App() {
-  const { user } = useAuth();
 
   return (
     <>
