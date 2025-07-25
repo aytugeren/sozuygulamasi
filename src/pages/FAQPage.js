@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     question: 'Etkinlik sayfam ne kadar süre yayında kalır?',
-    answer: 'Ücretsiz planlarda 3 ay, Pro planlarda 12 ay boyunca sayfanız yayında kalır. Süre sonunda isterseniz uzatabilirsiniz.',
+    answer: 'Sayfalarınız 3 ay boyunca aktif kalır. Eğer uzun süreli bir sayfa istiyorsanız bizimle iletişime geçebilirsiniz.',
   },
 ];
 

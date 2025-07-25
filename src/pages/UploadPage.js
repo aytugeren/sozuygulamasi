@@ -22,24 +22,31 @@ const PhotoPage = () => {
     fetchUploadedCount();
   }, [fetchUploadedCount]);
 
-  const handleChange = (e) => {
-    const files = Array.from(e.target.files);
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/quicktime'];
+const handleChange = (e) => {
+  const files = Array.from(e.target.files);
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/quicktime'];
+  const forbiddenExtensions = ['exe', 'bat', 'js', 'sh', 'php', 'py', 'pl', 'rb', 'jar', 'msi', 'apk', 'cmd', 'com', 'scr', 'vbs', 'ps1', 'cpl', 'gadget', 'wsf'];
+const MAX_SIZE = 100 * 1024 * 1024; // 100 MB
 
-    const validFiles = files.filter(file => {
-      if (!validTypes.includes(file.type)) {
-        alert(`Geçersiz dosya formatı: ${file.name}`);
-        return false;
-      }
-      if (file.size > 50 * 1024 * 1024) {
-        alert(`Dosya çok büyük (max 50MB): ${file.name}`);
-        return false;
-      }
-      return true;
-    });
+  const validFiles = files.filter(file => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (forbiddenExtensions.includes(ext)) {
+      alert(`Tehlikeli dosya uzantısı engellendi: ${file.name}`);
+      return false;
+    }
+    if (!validTypes.includes(file.type)) {
+      alert(`Geçersiz dosya formatı: ${file.name}`);
+      return false;
+    }
+    if (file.size > MAX_SIZE) {
+      alert(`Dosya çok büyük (max 100 MB): ${file.name}`);
+      return false;
+    }
+    return true;
+  });
 
-    setSelectedFiles(validFiles);
-  };
+  setSelectedFiles(validFiles);
+};
 
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return;
