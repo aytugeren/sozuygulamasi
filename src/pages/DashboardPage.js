@@ -478,14 +478,23 @@ const deleteCollection = async (collectionRef) => {
 </a>
 <button
   onClick={async () => {
-    if (navigator.share) {
+    if (!qrRef.current) return;
+    const dataUrl = await toPng(qrRef.current);
+
+    // PNG dosyasını blob'a çevir
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const file = new File([blob], "qr-kod.png", { type: "image/png" });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         title: 'Davetly QR',
         text: 'Davetly sayfamın QR kodunu ve linkini paylaşıyorum!',
+        files: [file],
         url: qrValue,
       });
     } else {
-      alert('Paylaşım özelliği bu tarayıcıda desteklenmiyor.');
+      alert('QR kod görseli paylaşımı bu tarayıcıda desteklenmiyor.');
     }
   }}
   className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
