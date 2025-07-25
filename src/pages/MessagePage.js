@@ -17,6 +17,7 @@ const MessagePage = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [liveMode, setLiveMode] = useState(false);
 
 useEffect(() => {
   const fetchUserId = async () => {
@@ -46,9 +47,26 @@ useEffect(() => {
     }
   }, [userId, slug]);
 
+  const handleFullscreen = () => {
+    setLiveMode(true);
+    setTimeout(() => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    }, 300);
+  };
+
   useEffect(() => {
     if (userId) fetchMessages();
   }, [userId, fetchMessages]);
+
+  useEffect(() => {
+    const exitHandler = () => {
+      if (!document.fullscreenElement) setLiveMode(false);
+    };
+    document.addEventListener('fullscreenchange', exitHandler);
+    return () => document.removeEventListener('fullscreenchange', exitHandler);
+  }, []);
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -74,10 +92,48 @@ const handleSubmit = async (e) => {
   }
 };
 
+  const animatedMessageClass = "animate__animated animate__fadeInUp";
+
+if (liveMode) {
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-pink-100 via-white to-purple-100 flex flex-col items-center justify-center z-50">
+      {/* Yanıp sönen canlı yayın ışığı */}
+      <div className="flex items-center gap-2 mb-2">
+        <span
+          className="inline-block w-4 h-4 rounded-full bg-red-500 animate-pulse"
+          style={{
+            boxShadow: '0 0 8px 2px #ef4444, 0 0 16px 4px #f87171',
+          }}
+        ></span>
+        <span className="font-bold text-red-500 tracking-widest text-lg animate-pulse">CANLI</span>
+      </div>
+      {/* Davetly reklamı */}
+      <div className="mb-4 flex flex-col items-center">
+        <span className="text-3xl font-bold text-pink-500 tracking-widest" style={{ fontFamily: "'Playwrite Magyarország', serif" }}>
+          DAVETLY
+        </span>
+        <span className="text-base text-gray-500 mt-1">En özel gününüzü dijitale taşıyın!</span>
+      </div>
+      <h1 className="text-4xl font-bold text-pink-400 mb-8">💌 Canlı Dilekler</h1>
+      <div className="w-full max-w-2xl px-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`bg-white bg-opacity-80 border border-pink-100 rounded-2xl p-6 mb-6 text-center shadow-lg text-2xl ${animatedMessageClass}`}
+            style={{ animationDelay: `${index * 0.2}s` }}
+          >
+            <span className="font-bold text-pink-500">{msg.name} {msg.emoji}</span>
+            <div className="mt-2 text-gray-800">{msg.message}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-white px-4 py-10">
       <h1 className="text-3xl font-semibold mb-6 text-center">💌 Dilek Bırak</h1>
-
       <button
         onClick={() => navigate(-1)}
         className="absolute top-4 left-4 text-sm text-blue-600 hover:underline"
@@ -124,6 +180,17 @@ const handleSubmit = async (e) => {
         >
           {loading ? '⏳ Gönderiliyor...' : '📨 Gönder'}
         </button>
+        <button
+        onClick={handleFullscreen}
+        className="mt-8 px-6 py-3 rounded-xl text-lg font-semibold bg-pink-400 text-white shadow transition
+          animate-pulse hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
+        style={{
+          boxShadow: '0 0 16px 2px #ec4899, 0 0 32px 4px #f9a8d4',
+          border: 'none',
+        }}
+      >
+        <span className="animate__animated animate__heartBeat animate__infinite">💖</span> Canlı Sohbet Modu
+      </button>
       </form>
 
       <div className="w-full max-w-2xl mt-10">
