@@ -12,11 +12,48 @@ const PhotoPage = () => {
   const [progress, setProgress] = useState(0);
   const [uploadedCount, setUploadedCount] = useState(0);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [mediaItems, setMediaItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedForDownload, setSelectedForDownload] = useState([]);
 
   const fetchUploadedCount = useCallback(async () => {
     const snapshot = await getDocs(collection(db, 'photos', slug, 'entries'));
     setUploadedCount(snapshot.size);
   }, [slug]);
+
+  const fetchUploadedItems = useCallback(async () => {
+  const snapshot = await getDocs(collection(db, 'photos', slug, 'entries'));
+  const items = snapshot.docs.map(doc => doc.data());
+  setMediaItems(items);
+  }, [slug]);
+
+  const toggleSelection = (url) => {
+    setSelectedForDownload((prev) =>
+      prev.includes(url)
+        ? prev.filter(item => item !== url)
+        : [...prev, url]
+    );
+  };
+
+  const downloadSelectedFiles = async () => {
+    for (let url of selectedForDownload) {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = url.split('/').pop().split('?')[0]; // dosya adını çıkar
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    setSelectedForDownload([]);
+  };
+
+  useEffect(() => {
+  fetchUploadedCount();
+  fetchUploadedItems();
+}, [fetchUploadedCount, fetchUploadedItems]);
 
   useEffect(() => {
     fetchUploadedCount();
@@ -150,6 +187,83 @@ const handleUpload = async () => {
       <div className="mt-6 text-gray-700">
         Toplam yüklenen içerik: <strong>{uploadedCount}</strong>
       </div>
+
+      {selectedForDownload.length > 0 && (
+        <div className="mb-4">
+          <button
+            onClick={downloadSelectedFiles}
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+          >
+            Seçili {selectedForDownload.length} öğeyi indir
+          </button>
+        </div>
+      )}
+
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
+  {mediaItems.map((item, idx) => (
+<div key={idx} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
+  <input
+    type="checkbox"
+    checked={selectedForDownload.includes(item.url)}
+    onChange={() => toggleSelection(item.url)}
+    className="absolute top-2 left-2 w-5 h-5"
+  />
+  
+  {item.resource_type === 'image' ? (
+    <img
+      src={item.url}
+      alt={item.original_filename}
+      className="rounded-md cursor-pointer w-full h-48 object-cover"
+      onClick={() => setSelectedItem(item)}
+    />
+  ) : (
+    <video
+      controls
+      className="rounded-md w-full h-48 object-cover"
+      src={item.url}
+    />
+  )}
+
+  <div className="flex justify-between mt-2 text-sm">
+    <button
+      onClick={() => setSelectedItem(item)}
+      className="text-blue-600 hover:underline"
+    >
+      Yakından Bak
+    </button>
+    <a
+      href={item.url}
+      download
+      className="text-green-600 hover:underline"
+    >
+      İndir
+    </a>
+  </div>
+</div>
+
+  ))}
+</div>
+{selectedItem && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-white p-4 rounded-xl shadow-lg max-w-full max-h-full overflow-auto relative">
+      <button
+        onClick={() => setSelectedItem(null)}
+        className="absolute top-2 right-2 text-white-900 text-2xl"
+      >
+        ✕
+      </button>
+      {selectedItem.resource_type === 'image' ? (
+        <img
+          src={selectedItem.url}
+          alt={selectedItem.original_filename}
+          className="max-w-full max-h-[80vh] rounded"
+        />
+      ) : (
+        <video controls src={selectedItem.url} className="max-w-full max-h-[80vh] rounded" />
+      )}
+    </div>
+  </div>
+)}
     </div>
   );
 };
