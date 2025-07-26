@@ -48,48 +48,54 @@ const MAX_SIZE = 100 * 1024 * 1024; // 100 MB
   setSelectedFiles(validFiles);
 };
 
-  const handleUpload = async () => {
-    if (selectedFiles.length === 0) return;
-    setUploading(true);
-    setProgress(0);
+const handleUpload = async () => {
+  if (selectedFiles.length === 0) return;
+  setUploading(true);
+  setProgress(0);
 
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "soz-uygulamasi");
-      data.append("folder", slug);
+  for (let i = 0; i < selectedFiles.length; i++) {
+    const file = selectedFiles[i];
+    const data = new FormData();
+    const fileName = file.name.replace(/\s+/g, '-'); // boşlukları sil
+    const cloudinaryName = process.env.REACT_APP_CLOUNDINARY_CLOUD_NAME;
+    data.append("file", file);
+    data.append("upload_preset", "soz-uygulamasi");
+    data.append("folder", slug); // klasör adı
+    data.append("public_id", `${slug}/${Date.now()}-${fileName}`);
 
-      try {
-        const res = await fetch("https://api.cloudinary.com/v1_1/dyodwyfu4/auto/upload", {
-          method: "POST",
-          body: data
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryName}/auto/upload`, {
+        method: "POST",
+        body: data
+      });
+
+      const result = await res.json();
+
+      if (result.secure_url) {
+        await addDoc(collection(db, 'photos', slug, 'entries'), {
+          url: result.secure_url,
+          public_id: result.public_id,
+          original_filename: result.original_filename,
+          resource_type: result.resource_type,
+          uploadedAt: new Date(),
         });
-
-        const result = await res.json();
-
-        if (result.secure_url) {
-          await addDoc(collection(db, 'photos', slug, 'entries'), {
-            url: result.secure_url,
-            resource_type: result.resource_type,
-            uploadedAt: new Date(),
-          });
-          await fetchUploadedCount();
-        } else {
-          console.error("Yükleme başarısız:", result);
-        }
-      } catch (error) {
-        console.error("Cloudinary yükleme hatası:", error);
+        await fetchUploadedCount();
+      } else {
+        console.error("Yükleme başarısız:", result);
       }
-
-      setProgress(Math.round(((i + 1) / selectedFiles.length) * 100));
+    } catch (error) {
+      console.error("Cloudinary yükleme hatası:", error);
     }
 
-    setUploadSuccess(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 1500);
-  };
+    setProgress(Math.round(((i + 1) / selectedFiles.length) * 100));
+  }
+
+  setUploadSuccess(true);
+  setTimeout(() => {
+    window.location.reload();
+  }, 1500);
+};
+
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 text-center">

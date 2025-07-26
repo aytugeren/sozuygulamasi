@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../databases/firebase';
 import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
-
+import { QRCodeCanvas } from 'qrcode.react';
 
 const emojis = ['😊', '🎉', '💖', '🥳', '🙏', '🎈', '🌟'];
 
@@ -134,6 +134,26 @@ if (liveMode) {
           DAVETLY
         </span>
         <span className="text-base text-gray-500 mt-1">En özel gününüzü dijitale taşıyın!</span>
+      </div>
+      {/* QR Kod Butonu - Sağ Alt Köşe */}
+      <div
+        className="fixed bottom-4 right-4 bg-white rounded-full shadow-lg p-2 hover:scale-105 transition cursor-pointer animate-pulse"
+        title="Bize kahve ısmarla ☕"
+        onClick={() => window.open('https://coff.ee/erenevimmd', '_blank')}
+      >
+        <QRCodeCanvas
+          value="https://coff.ee/erenevimmd"
+          size={64}
+          bgColor="#ffffff"
+          fgColor="#ef4444"
+          level="H"
+          includeMargin={false}
+        />
+            <div className="absolute inset-0 flex items-center justify-center">
+      <span className="text-[8px] font-bold text-red-600 bg-white bg-opacity-80 px-1 rounded">
+        Destek Ol
+      </span>
+    </div>
       </div>
       <h1 className="text-4xl font-bold text-pink-400 mb-8">💌 Canlı Dilekler</h1>
 <div className="w-full max-w-2xl px-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>

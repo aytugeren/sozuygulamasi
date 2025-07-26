@@ -18,7 +18,6 @@ useEffect(() => {
     return;
   }
   const fetchPage = async () => {
-    debugger;
     try {
       // Slug ile sayfa verisini çekiyoruz
       const slugRef = doc(db, 'slugs', slug);
