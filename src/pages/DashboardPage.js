@@ -198,9 +198,26 @@ const deleteCollection = async (collectionRef) => {
         <div>
           <label className="block mb-1">🖋️ Başlık Yazı Tipi</label>
           <select value={titleFont} onChange={(e) => setTitleFont(e.target.value)} className="w-full border px-4 py-2 rounded">
-            <option value="romantic">Romantik</option>
-            <option value="elegant">Klasik</option>
-            <option value="sans">Modern</option>
+            <option value="romantic">💕 Great Vibes (Romantik)</option>
+            <option value="romantic2">💝 Dancing Script (Romantik)</option>
+            <option value="romantic3">🌸 Pacifico (Romantik)</option>
+            <option value="romantic4">🌹 Satisfy (Romantik)</option>
+            <option value="elegant">📜 Playfair Display (Klasik)</option>
+            <option value="elegant2">🏛️ Cormorant Garamond (Klasik)</option>
+            <option value="elegant3">📚 Libre Baskerville (Klasik)</option>
+            <option value="elegant4">🎭 Crimson Text (Klasik)</option>
+            <option value="modern">⚡ Poppins (Modern)</option>
+            <option value="modern2">🚀 Inter (Modern)</option>
+            <option value="modern3">💻 Roboto (Modern)</option>
+            <option value="modern4">🎯 Open Sans (Modern)</option>
+            <option value="decorative">✨ Abril Fatface (Dekoratif)</option>
+            <option value="decorative2">🎨 Bebas Neue (Dekoratif)</option>
+            <option value="decorative3">🔥 Righteous (Dekoratif)</option>
+            <option value="decorative4">🦞 Lobster (Dekoratif)</option>
+            <option value="handwriting">✍️ Kalam (El Yazısı)</option>
+            <option value="handwriting2">🌺 Indie Flower (El Yazısı)</option>
+            <option value="handwriting3">🏠 Architects Daughter (El Yazısı)</option>
+            <option value="handwriting4">📝 Caveat (El Yazısı)</option>
           </select>
         </div>
 
@@ -223,9 +240,26 @@ const deleteCollection = async (collectionRef) => {
         <div>
           <label className="block mb-1">🖋️ Alt Yazı Yazı Tipi</label>
           <select value={subtitleFont} onChange={(e) => setSubtitleFont(e.target.value)} className="w-full border px-4 py-2 rounded">
-            <option value="romantic">Romantik</option>
-            <option value="elegant">Klasik</option>
-            <option value="sans">Modern</option>
+            <option value="romantic">💕 Great Vibes (Romantik)</option>
+            <option value="romantic2">💝 Dancing Script (Romantik)</option>
+            <option value="romantic3">🌸 Pacifico (Romantik)</option>
+            <option value="romantic4">🌹 Satisfy (Romantik)</option>
+            <option value="elegant">📜 Playfair Display (Klasik)</option>
+            <option value="elegant2">🏛️ Cormorant Garamond (Klasik)</option>
+            <option value="elegant3">📚 Libre Baskerville (Klasik)</option>
+            <option value="elegant4">🎭 Crimson Text (Klasik)</option>
+            <option value="modern">⚡ Poppins (Modern)</option>
+            <option value="modern2">🚀 Inter (Modern)</option>
+            <option value="modern3">💻 Roboto (Modern)</option>
+            <option value="modern4">🎯 Open Sans (Modern)</option>
+            <option value="decorative">✨ Abril Fatface (Dekoratif)</option>
+            <option value="decorative2">🎨 Bebas Neue (Dekoratif)</option>
+            <option value="decorative3">🔥 Righteous (Dekoratif)</option>
+            <option value="decorative4">🦞 Lobster (Dekoratif)</option>
+            <option value="handwriting">✍️ Kalam (El Yazısı)</option>
+            <option value="handwriting2">🌺 Indie Flower (El Yazısı)</option>
+            <option value="handwriting3">🏠 Architects Daughter (El Yazısı)</option>
+            <option value="handwriting4">📝 Caveat (El Yazısı)</option>
           </select>
         </div>
 
@@ -251,9 +285,26 @@ const deleteCollection = async (collectionRef) => {
             onChange={(e) => setAltFont(e.target.value)}
             className="w-full border px-4 py-2 rounded"
           >
-            <option value="romantic">Romantik</option>
-            <option value="elegant">Klasik</option>
-            <option value="sans">Modern</option>
+            <option value="romantic">💕 Great Vibes (Romantik)</option>
+            <option value="romantic2">💝 Dancing Script (Romantik)</option>
+            <option value="romantic3">🌸 Pacifico (Romantik)</option>
+            <option value="romantic4">🌹 Satisfy (Romantik)</option>
+            <option value="elegant">📜 Playfair Display (Klasik)</option>
+            <option value="elegant2">🏛️ Cormorant Garamond (Klasik)</option>
+            <option value="elegant3">📚 Libre Baskerville (Klasik)</option>
+            <option value="elegant4">🎭 Crimson Text (Klasik)</option>
+            <option value="modern">⚡ Poppins (Modern)</option>
+            <option value="modern2">🚀 Inter (Modern)</option>
+            <option value="modern3">💻 Roboto (Modern)</option>
+            <option value="modern4">🎯 Open Sans (Modern)</option>
+            <option value="decorative">✨ Abril Fatface (Dekoratif)</option>
+            <option value="decorative2">🎨 Bebas Neue (Dekoratif)</option>
+            <option value="decorative3">🔥 Righteous (Dekoratif)</option>
+            <option value="decorative4">🦞 Lobster (Dekoratif)</option>
+            <option value="handwriting">✍️ Kalam (El Yazısı)</option>
+            <option value="handwriting2">🌺 Indie Flower (El Yazısı)</option>
+            <option value="handwriting3">🏠 Architects Daughter (El Yazısı)</option>
+            <option value="handwriting4">📝 Caveat (El Yazısı)</option>
           </select>
         </div>
 
