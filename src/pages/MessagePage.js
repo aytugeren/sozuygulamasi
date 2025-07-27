@@ -4,9 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../databases/firebase';
 import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
 import { QRCodeCanvas } from 'qrcode.react';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const emojis = ['😊', '🎉', '💖', '🥳', '🙏', '🎈', '🌟'];
-
+const SITE_KEY = process.env.REACT_APP_GOOGLE_SITE_KEY;
 const MessagePage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -76,6 +77,78 @@ useEffect(() => {
     return () => document.removeEventListener('fullscreenchange', exitHandler);
   }, []);
 
+  const MessageForm = ({
+    name,
+    setName,
+    message,
+    setMessage,
+    emoji,
+    setEmoji,
+    loading,
+    handleSubmit,
+    emojis,
+    sent,
+    handleFullscreen
+  }) => {
+    const { executeRecaptcha } = useGoogleReCaptcha();
+  
+    const wrappedHandleSubmit = async (e) => {
+      e.preventDefault();
+      if (!executeRecaptcha) return;
+      const token = await executeRecaptcha('message_send');
+      handleSubmit(e, token);
+    };
+  
+    return (
+      <form onSubmit={wrappedHandleSubmit} className="w-full max-w-md space-y-4">
+        <input
+          type="text"
+          placeholder="👨‍🏫 Adınız (isteğe bağlı)"
+          className="w-full border border-gray-300 px-4 py-2 rounded"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <textarea
+          placeholder="📝 Güzel dileğinizi buraya yazın..."
+          rows={5}
+          className="w-full border border-gray-300 px-4 py-2 rounded"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        ></textarea>
+        <div className="flex flex-wrap gap-2">
+          {emojis.map((em, idx) => (
+            <button
+              type="button"
+              key={idx}
+              className={`px-3 py-1 rounded-full border ${emoji === em ? 'bg-blue-200' : 'bg-gray-100'}`}
+              onClick={() => setEmoji(em)}
+            >
+              {em}
+            </button>
+          ))}
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded shadow disabled:opacity-50"
+          disabled={loading}
+        >
+          {loading ? '⏳ Gönderiliyor...' : '📨 Gönder'}
+        </button>
+        <button
+          onClick={handleFullscreen}
+          type="button"
+          className="mt-8 px-6 py-3 rounded-xl text-lg font-semibold bg-pink-400 text-white shadow transition animate-pulse hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
+          style={{
+            boxShadow: '0 0 16px 2px #ec4899, 0 0 32px 4px #f9a8d4',
+            border: 'none'
+          }}
+        >
+          <span className="animate__animated animate__heartBeat animate__infinite">💖</span> Canlı Sohbet Modu
+        </button>
+      </form>
+    );
+  };
+
 useEffect(() => {
   let interval;
   if (liveMode && userId) {
@@ -89,16 +162,17 @@ useEffect(() => {
   };
 }, [liveMode, userId, fetchMessages]);
 
-const handleSubmit = async (e) => {
+const handleSubmit = async (e, token) => {
   e.preventDefault();
-  if (!message.trim() || !userId) return;
+  if (!message.trim() || !userId || !token) return;
   setLoading(true);
   try {
     await addDoc(collection(db, 'users', userId, 'pages', slug, 'messages'), {
-      name: name.trim() || '🧑 Misafir',
+      name: name.trim() || '👨‍🏫 Misafir',
       message: message.trim(),
       emoji,
       createdAt: Timestamp.now(),
+      recaptchaToken: token
     });
     setSent(true);
     setMessage('');
@@ -187,55 +261,21 @@ if (liveMode) {
 
       {sent && <p className="text-green-600 mb-4">✅ Mesajınız başarıyla gönderildi 🎉</p>}
 
-      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-        <input
-          type="text"
-          placeholder="🧑 Adınız (isteğe bağlı)"
-          className="w-full border border-gray-300 px-4 py-2 rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+      <GoogleReCaptchaProvider reCaptchaKey={SITE_KEY}>
+        <MessageForm
+          name={name}
+          setName={setName}
+          message={message}
+          setMessage={setMessage}
+          emoji={emoji}
+          setEmoji={setEmoji}
+          loading={loading}
+          handleSubmit={handleSubmit}
+          emojis={emojis}
+          sent={sent}
+          handleFullscreen={handleFullscreen}
         />
-
-        <textarea
-          placeholder="📝 Güzel dileğinizi buraya yazın..."
-          rows={5}
-          className="w-full border border-gray-300 px-4 py-2 rounded"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        ></textarea>
-
-        <div className="flex flex-wrap gap-2">
-          {emojis.map((em, idx) => (
-            <button
-              type="button"
-              key={idx}
-              className={`px-3 py-1 rounded-full border ${emoji === em ? 'bg-blue-200' : 'bg-gray-100'}`}
-              onClick={() => setEmoji(em)}
-            >
-              {em}
-            </button>
-          ))}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded shadow disabled:opacity-50"
-          disabled={loading}
-        >
-          {loading ? '⏳ Gönderiliyor...' : '📨 Gönder'}
-        </button>
-        <button
-        onClick={handleFullscreen}
-        className="mt-8 px-6 py-3 rounded-xl text-lg font-semibold bg-pink-400 text-white shadow transition
-          animate-pulse hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-300"
-        style={{
-          boxShadow: '0 0 16px 2px #ec4899, 0 0 32px 4px #f9a8d4',
-          border: 'none',
-        }}
-      >
-        <span className="animate__animated animate__heartBeat animate__infinite">💖</span> Canlı Sohbet Modu
-      </button>
-      </form>
+      </GoogleReCaptchaProvider>
 
       <div className="w-full max-w-2xl mt-10">
         <h2 className="text-xl font-semibold mb-2 text-left">📜 Dilekler ({messages.length})</h2>

@@ -2,24 +2,39 @@ import React, { useState } from 'react';
 import { auth } from '../databases/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
-const AuthPage = () => {
+const SITE_KEY = process.env.REACT_APP_GOOGLE_SITE_KEY; // reCAPTCHA v3 anahtarınız
+
+const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!executeRecaptcha) {
+      setError('Recaptcha yüklenemedi');
+      return;
+    }
+
     try {
+      const token = await executeRecaptcha('submit');
+
+      // (Opsiyonel) Token'ı backend'e göndererek doğrulama yapabilirsiniz
+      console.log('Recaptcha token:', token);
+
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
       }
-      navigate('/dashboard'); // Giriş sonrası yönlendirme
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     }
@@ -31,13 +46,14 @@ const AuthPage = () => {
         {isLogin ? 'Giriş Yap' : 'Kayıt Ol'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
         <input
           type="email"
           placeholder="E-posta"
           className="w-full border px-4 py-2 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
@@ -45,6 +61,7 @@ const AuthPage = () => {
           className="w-full border px-4 py-2 rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
@@ -63,6 +80,15 @@ const AuthPage = () => {
         </button>
       </p>
     </div>
+  );
+};
+
+// Ana bileşeni provider ile sarmalıyoruz
+const AuthPage = () => {
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={SITE_KEY}>
+      <AuthForm />
+    </GoogleReCaptchaProvider>
   );
 };
 

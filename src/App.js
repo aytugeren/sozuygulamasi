@@ -9,6 +9,8 @@ import VideoPage from './pages/VideoPage';
 import MainPage from './pages/MainPage';
 import ProCheckout from './pages/ProCheckout';
 import { QRCodeCanvas } from 'qrcode.react';
+import CookieConsent from './components/CookieConsent';
+import CookiePolicyPage from './pages/CookiePolicyPage';
 
 function App() {
 
@@ -39,12 +41,13 @@ function App() {
         <Route path="/:slug/photos" element={<UploadPage />} />
         <Route path="/:slug/messages" element={<MessagePage />} />
         <Route path="/:slug/video" element={<VideoPage />} />
+        <Route path="/cookie-policy" element={<CookiePolicyPage />} />
 
         </Routes>
       </Router>
 
 <div
-  className="fixed bottom-4 right-4 p-2 rounded-full shadow-lg cursor-pointer hover:scale-105 transition bg-white"
+  className="fixed bottom-4 left-4 p-2 rounded-full shadow-lg cursor-pointer hover:scale-105 transition bg-white"
   title="Bize kahve ısmarla ☕"
   onClick={() => window.open('https://coff.ee/erenevimmd', '_blank')}
 >
@@ -64,6 +67,8 @@ function App() {
     </div>
   </div>
 </div>
+
+<CookieConsent />
 
     </>
   );
