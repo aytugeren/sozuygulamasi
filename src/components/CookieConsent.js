@@ -38,52 +38,80 @@ const CookieConsent = () => {
       <style>{`
         .cookie-bar-custom {
           position: fixed;
-          left: 32px;
+          left: 50%;
           bottom: 32px;
-          min-width: 320px;
-          max-width: 90vw;
+          transform: translateX(-50%);
+          max-width: 95vw;
           background: rgba(34, 34, 34, 0.85);
           color: #fff;
-          padding: 14px 28px;
-          border-radius: 18px;
+          padding: 16px 24px 10px 24px;
+          border-radius: 16px;
           box-shadow: 0 4px 24px rgba(0,0,0,0.12);
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: flex-start;
           z-index: 1000;
           backdrop-filter: blur(6px);
           font-size: 14px;
           gap: 8px;
           transition: all 0.2s;
+          overflow: hidden;
         }
         .cookie-bar-row {
+          width: 100%;
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 12px;
+        }
+        .cookie-bar-row span {
+          flex: 1 1 0%;
+          min-width: 0;
+          line-height: 1.5;
+          word-break: break-word;
         }
         .cookie-bar-timer {
           font-size: 12px;
           color: #cbd5e1;
-          margin-top: 4px;
+          margin-top: 2px;
+          width: 100%;
+          text-align: left;
+        }
+        .cookie-bar-btn {
+          padding: 8px 20px;
+          background: rgba(74, 222, 128, 0.95);
+          color: #222;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 12px;
+          box-shadow: 0 2px 8px rgba(74,222,128,0.10);
+          transition: background 0.2s;
+          white-space: nowrap;
         }
         @media (max-width: 640px) {
           .cookie-bar-custom {
             left: 8px;
+            right: 8px;
             bottom: 80px;
-            min-width: 90vw;
+            transform: none;
+            width: auto;
             max-width: 98vw;
-            padding: 10px 8px;
+            padding: 10px 8px 8px 8px;
             border-radius: 12px;
             font-size: 12px;
           }
           .cookie-bar-row {
             gap: 8px;
           }
+          .cookie-bar-timer {
+            font-size: 11px;
+          }
         }
       `}</style>
       <div className="cookie-bar-custom">
         <div className="cookie-bar-row">
-          <span style={{ lineHeight: 1.5 }}>
+          <span>
             Bu web sitesi, deneyiminizi geliştirmek için çerezleri kullanır. 
             <a href="/cookie-policy" style={{ color: '#4ade80', textDecoration: 'underline', marginLeft: 4 }}>
               Detaylar için gizlilik politikamıza bakabilirsiniz.
@@ -91,18 +119,7 @@ const CookieConsent = () => {
           </span>
           <button
             onClick={handleAccept}
-            style={{
-              padding: '8px 20px',
-              background: 'rgba(74, 222, 128, 0.95)',
-              color: '#222',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '12px',
-              boxShadow: '0 2px 8px rgba(74,222,128,0.10)',
-              transition: 'background 0.2s',
-            }}
+            className="cookie-bar-btn"
           >
             Kabul Et
           </button>
