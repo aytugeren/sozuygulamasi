@@ -1,6 +1,7 @@
 export const BACKGROUND_TEMPLATES = [
-  'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476018/Untitled_design_3_paar4c.png',
-  'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476235/Untitled_design_4_dgcp9t.png',
-  'https://res.cloudinary.com/dyodwyfu4/image/upload/v1753476337/Untitled_design_5_robwmu.png'
+  'https://res.cloudinary.com/dyodwyfu4/image/upload/fl_preserve_transparency/v1753733341/background1_tcjgiu.jpg?_s=public-apps',
+  'https://res.cloudinary.com/dyodwyfu4/image/upload/fl_preserve_transparency/v1753733344/background2_ebwgui.jpg?_s=public-apps',
+  'https://res.cloudinary.com/dyodwyfu4/image/upload/fl_preserve_transparency/v1753733341/background3_vqrqfq.jpg?_s=public-apps',
+  'https://res.cloudinary.com/dyodwyfu4/image/upload/fl_preserve_transparency/v1753733343/background4_hevfyc.jpg?_s=public-apps'
 ];
 
