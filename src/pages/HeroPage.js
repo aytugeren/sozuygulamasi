@@ -142,6 +142,7 @@ const HeroPage = () => {
         subtitle: subtitle || 'Özel gününüzü kutluyoruz',
         altText: altText || 'Teşekkürler',
         videoLink: videoLink || '',
+        backgroundImage: '',
         createdAt: new Date(),
         titleFont,
         titleColor,

@@ -102,7 +102,7 @@ const PhotoPage = () => {
       const file = selectedFiles[i];
       const data = new FormData();
       const fileName = file.name.replace(/\s+/g, '-');
-      const cloudinaryName = process.env.REACT_APP_CLOUNDINARY_CLOUD_NAME;
+      const cloudinaryName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
       data.append("file", file);
       data.append("upload_preset", "soz-uygulamasi");
       data.append("folder", slug);
