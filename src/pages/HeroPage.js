@@ -35,6 +35,7 @@ const HeroPage = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [bgFile, setBgFile] = useState(null);
   const [bgPreview, setBgPreview] = useState('');
+  const [bgUploading, setBgUploading] = useState(false);
   
   // Font ve renk state'leri
   const [titleFont, setTitleFont] = useState('romantic');
@@ -69,7 +70,11 @@ const HeroPage = () => {
   };
 
   const uploadBackground = async () => {
-    if (!bgFile) return;
+    if (!bgFile) {
+      toast.error('Lütfen bir dosya seçin');
+      return;
+    }
+    setBgUploading(true);
     const data = new FormData();
     const fileName = bgFile.name.replace(/\s+/g, '-');
     const cloudinaryName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
@@ -86,9 +91,15 @@ const HeroPage = () => {
         setBackgroundImage(result.secure_url);
         setBgPreview(result.secure_url);
         setBgFile(null);
+        toast.success('Arka plan yüklendi!');
+      } else {
+        toast.error('Yükleme başarısız oldu');
       }
     } catch (err) {
       console.error('Cloudinary upload failed', err);
+      toast.error('Yükleme sırasında hata oluştu');
+    } finally {
+      setBgUploading(false);
     }
   };
 
@@ -535,13 +546,17 @@ const HeroPage = () => {
                   />
                 ))}
               </div>
-              <input type="file" accept="image/*" onChange={handleBgChange} />
+              <label htmlFor="hero-bg-upload" className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded shadow cursor-pointer inline-block">
+                Dosya Seç
+              </label>
+              <input id="hero-bg-upload" type="file" accept="image/*" onChange={handleBgChange} className="hidden" />
               <button
                 onClick={uploadBackground}
                 type="button"
-                className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
+                disabled={bgUploading}
+                className={`bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow ${bgUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Yükle
+                {bgUploading ? 'Yükleniyor...' : 'Yükle'}
               </button>
               {bgPreview && (
                 <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
