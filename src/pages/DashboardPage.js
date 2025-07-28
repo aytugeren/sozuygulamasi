@@ -37,6 +37,7 @@ const DashboardPage = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [bgFile, setBgFile] = useState(null);
   const [bgPreview, setBgPreview] = useState('');
+  const [bgUploading, setBgUploading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
@@ -67,7 +68,11 @@ const handleBgChange = (e) => {
 };
 
 const uploadBackground = async () => {
-  if (!bgFile) return;
+  if (!bgFile) {
+    toast.error('Lütfen bir dosya seçin');
+    return;
+  }
+  setBgUploading(true);
   const data = new FormData();
   const fileName = bgFile.name.replace(/\s+/g, '-');
   const cloudinaryName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
@@ -84,9 +89,15 @@ const uploadBackground = async () => {
       setBackgroundImage(result.secure_url);
       setBgPreview(result.secure_url);
       setBgFile(null);
+      toast.success('Arka plan yüklendi!');
+    } else {
+      toast.error('Yükleme başarısız oldu');
     }
   } catch (err) {
     console.error('Cloudinary upload failed', err);
+    toast.error('Yükleme sırasında hata oluştu');
+  } finally {
+    setBgUploading(false);
   }
 };
 
@@ -394,12 +405,16 @@ const deleteCollection = async (collectionRef) => {
               />
             ))}
           </div>
-          <input className='bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow' type="file" accept="image/*" onChange={handleBgChange} />
+          <label htmlFor="bg-upload" className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded shadow cursor-pointer inline-block ml-2">
+            Dosya Seç
+          </label>
+          <input id="bg-upload" type="file" accept="image/*" onChange={handleBgChange} className="hidden" />
           <button
             onClick={uploadBackground}
-            className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
+            disabled={bgUploading}
+            className={`bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow ${bgUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Yükle
+            {bgUploading ? 'Yükleniyor...' : 'Yükle'}
           </button>
           {bgPreview && (
             <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
@@ -605,9 +620,16 @@ const deleteCollection = async (collectionRef) => {
                       />
                     ))}
                   </div>
-                  <input type="file" accept="image/*" onChange={handleBgChange} />
-                  <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">
-                    Yükle
+                  <label htmlFor="bg-edit-upload" className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded shadow cursor-pointer inline-block ml-2">
+                    Dosya Seç
+                  </label>
+                  <input id="bg-edit-upload" type="file" accept="image/*" onChange={handleBgChange} className="hidden" />
+                  <button
+                    onClick={uploadBackground}
+                    disabled={bgUploading}
+                    className={`bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow ${bgUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    {bgUploading ? 'Yükleniyor...' : 'Yükle'}
                   </button>
                   {bgPreview && (
                     <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
@@ -639,7 +661,7 @@ const deleteCollection = async (collectionRef) => {
                       videoLink,
                       backgroundImage
                     });
-                     <p className="text-green-600 mb-4">✅ Mesajınız başarıyla gönderildi 🎉</p>
+                    toast.success('Sayfa güncellendi!');
                     setEditingSlug(null);
                     fetchUserPages();
                   }}
