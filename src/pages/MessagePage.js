@@ -6,6 +6,27 @@ import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, Timestamp } f
 import { QRCodeCanvas } from 'qrcode.react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
+const PROFANE_WORDS = [
+  'amk', 'aq', 'orospu', 'sik', 'sikerim', 'fuck', 'shit', 'bitch', 'pussy',
+  'dick', 'asshole', 'göt', 'piç', 'siktir', 'fucker', 'salak', 'aptal', 'mal'
+];
+
+const NEGATIVE_WORDS = [
+  'kötü', 'rezil', 'berbat', 'nefret', 'iğrenç', 'beğenmedim', 'çirkin',
+  'çok kötü', 'saçma', 'aptalca', 'useless', 'terrible', 'awful',
+  'disgusting', 'hate', 'stupid'
+];
+
+function hasNegativeSentiment(text) {
+  const lower = text.toLowerCase();
+  return NEGATIVE_WORDS.some(word => lower.includes(word));
+}
+
+function containsProfanity(text) {
+  const lower = text.toLowerCase();
+  return PROFANE_WORDS.some(word => lower.includes(word));
+}
+
 const emojis = ['😊', '🎉', '💖', '🥳', '🙏', '🎈', '🌟'];
 
 function MessageForm({
@@ -152,6 +173,14 @@ useEffect(() => {
   const handleSubmit = async (e, token) => {
     e.preventDefault();
     if (!message.trim() || !userId || !token) return;
+    if (
+      containsProfanity(message) ||
+      containsProfanity(name) ||
+      hasNegativeSentiment(message)
+    ) {
+      alert('Lütfen olumlu ve uygun bir dil kullanın.');
+      return;
+    }
     setLoading(true);
     try {
       await addDoc(collection(db, 'users', userId, 'pages', slug, 'messages'), {
