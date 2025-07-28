@@ -394,14 +394,13 @@ const deleteCollection = async (collectionRef) => {
               />
             ))}
           </div>
-          <input type="file" accept="image/*" onChange={handleBgChange} />
+          <input className='bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow' type="file" accept="image/*" onChange={handleBgChange} />
           <button
             onClick={uploadBackground}
             className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
           >
             Yükle
           </button>
-          <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">Yükle</button>
           {bgPreview && (
             <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
           )}
@@ -607,10 +606,6 @@ const deleteCollection = async (collectionRef) => {
                     ))}
                   </div>
                   <input type="file" accept="image/*" onChange={handleBgChange} />
-                  <button
-                    onClick={uploadBackground}
-                    className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
-                  >
                   <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">
                     Yükle
                   </button>
