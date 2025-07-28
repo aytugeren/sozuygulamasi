@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import DraggableText from '../components/DraggableText';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../databases/firebase';
@@ -439,24 +440,24 @@ const deleteCollection = async (collectionRef) => {
                 style={bgPreview ? { backgroundImage: `url(${bgPreview})` } : backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {}}
               >
                 <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
-                  <p
+                  <DraggableText
                     className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
                     style={{ color: subtitleColor }}
                   >
                     {subtitle || 'Sözümüze Hoşgeldiniz...'}
-                  </p>
-                  <h1
+                  </DraggableText>
+                  <DraggableText
                     className={`text-3xl font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
                     style={{ color: titleColor }}
                   >
                     {title || 'Burcu & Fatih'}
-                  </h1>
-                  <p
+                  </DraggableText>
+                  <DraggableText
                     className={`text-sm mb-8 ${altFont ? `font-${altFont}` : 'font-sans'}`}
                     style={{ color: altColor }}
                   >
                     {altText || 'Bizimkisi bir aşk hikayesi..'}
-                  </p>
+                  </DraggableText>
                 </div>
                 <div className="p-4 text-center border-t">
                   <p className="text-xs text-gray-500">

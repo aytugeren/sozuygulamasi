@@ -1,5 +1,6 @@
 // filepath: [HeroPage.js](http://_vscodecontentref_/0)
 import React, { useState, useEffect } from 'react';
+import DraggableText from '../components/DraggableText';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../databases/firebase';
 import { 
@@ -349,24 +350,24 @@ const HeroPage = () => {
                 className="flex-1 p-8 flex flex-col items-center justify-center text-center bg-cover bg-center"
                 style={bgPreview ? { backgroundImage: `url(${bgPreview})` } : backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {}}
               >
-                <p
+                <DraggableText
                   className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
                   style={{ color: subtitleColor }}
                 >
                   {subtitle || 'Sözümüze Hoşgeldiniz...'}
-                </p>
-                <h1
+                </DraggableText>
+                <DraggableText
                   className={`text-3xl font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
                   style={{ color: titleColor }}
                 >
                   {title || 'Burcu & Fatih'}
-                </h1>
-                <p
+                </DraggableText>
+                <DraggableText
                   className={`text-sm mb-8 ${altFont ? `font-${altFont}` : 'font-sans'}`}
                   style={{ color: altColor }}
                 >
                   {altText || 'Bizimkisi bir aşk hikayesi..'}
-                </p>
+                </DraggableText>
               </div>
               <div className="p-4 text-center border-t">
                 <p className="text-xs text-gray-500">
@@ -580,6 +581,12 @@ const HeroPage = () => {
                 className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 px-6 rounded-lg disabled:opacity-50"
               >
                 {loading ? 'Oluşturuluyor...' : 'Sayfayı Oluştur'}
+              </button>
+              <button
+                onClick={handleGoToDashboard}
+                className="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg mt-2"
+              >
+                Dashboard'a Geç
               </button>
             </div>
           )}
