@@ -15,6 +15,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 import {toast} from 'react-toastify';
+import { BACKGROUND_TEMPLATES } from '../utils/backgroundTemplates';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -33,6 +34,9 @@ const DashboardPage = () => {
   const [altFont, setAltFont] = useState('sans');
   const [altColor, setAltColor] = useState('#888888');
   const [videoLink, setVideoLink] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState('');
+  const [bgFile, setBgFile] = useState(null);
+  const [bgPreview, setBgPreview] = useState('');
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -40,6 +44,50 @@ const DashboardPage = () => {
 
 const qrRef = useRef(null);
 const invalidSlugRegex = /[^a-zA-Z-]/;
+
+const handleBgChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  const forbiddenExt = ['exe', 'bat', 'js', 'sh', 'php', 'py', 'pl', 'rb', 'jar'];
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (forbiddenExt.includes(ext) || !allowedTypes.includes(file.type)) {
+    alert('Yalnızca resim dosyaları yükleyebilirsiniz.');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Dosya boyutu 5MB\u0027ı geçemez.');
+    return;
+  }
+
+  setBgFile(file);
+  setBgPreview(URL.createObjectURL(file));
+};
+
+const uploadBackground = async () => {
+  if (!bgFile) return;
+  const data = new FormData();
+  const fileName = bgFile.name.replace(/\s+/g, '-');
+  const cloudinaryName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+  data.append('file', bgFile);
+  data.append('upload_preset', 'soz-uygulamasi');
+  data.append('public_id', `${user.uid}/background-${Date.now()}-${fileName}`);
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`, {
+      method: 'POST',
+      body: data
+    });
+    const result = await res.json();
+    if (result.secure_url) {
+      setBackgroundImage(result.secure_url);
+      setBgPreview(result.secure_url);
+      setBgFile(null);
+    }
+  } catch (err) {
+    console.error('Cloudinary upload failed', err);
+  }
+};
 
 
   const fetchUserPages = useCallback(async () => {
@@ -110,6 +158,7 @@ const deleteCollection = async (collectionRef) => {
       altFont,
       altColor,
       videoLink,
+      backgroundImage,
       createdAt: new Date(),
     });
 
@@ -119,6 +168,8 @@ const deleteCollection = async (collectionRef) => {
     setTitle('');
     setSubtitle('');
     setVideoLink('');
+    setBackgroundImage('');
+    setBgPreview('');
   };
 
   const handleLogout = async () => {
@@ -318,6 +369,29 @@ const deleteCollection = async (collectionRef) => {
           />
         </div>
         <div>
+          <label className="block mb-1">🌆 Arka Plan Fotoğrafı</label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {BACKGROUND_TEMPLATES.map((url) => (
+              <img
+                key={url}
+                src={url}
+                alt="template"
+                onClick={() => {
+                  setBackgroundImage(url);
+                  setBgPreview(url);
+                  setBgFile(null);
+                }}
+                className={`w-16 h-16 object-cover rounded cursor-pointer ${bgPreview===url ? 'ring-2 ring-pink-500' : ''}`}
+              />
+            ))}
+          </div>
+          <input type="file" accept="image/*" onChange={handleBgChange} />
+          <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">Yükle</button>
+          {bgPreview && (
+            <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
+          )}
+        </div>
+        <div>
           <label className="block mb-1">🎥 Video Linki</label>
         <input
           type="text"
@@ -373,6 +447,8 @@ const deleteCollection = async (collectionRef) => {
                     setSubtitleFont(p.subtitleFont || 'sans');
                     setVideoLink(p.videoLink || '');
                     setAltText(p.altText || '');
+                    setBackgroundImage(p.backgroundImage || '');
+                    setBgPreview(p.backgroundImage || '');
                   }}
                   className="text-yellow-600 text-sm hover:underline"
                 >
@@ -462,6 +538,31 @@ const deleteCollection = async (collectionRef) => {
                   />
                 </div>
                 <div>
+                  <label className="block mb-1">🌆 Arka Plan Fotoğrafı</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {BACKGROUND_TEMPLATES.map((url) => (
+                      <img
+                        key={url}
+                        src={url}
+                        alt="template"
+                        onClick={() => {
+                          setBackgroundImage(url);
+                          setBgPreview(url);
+                          setBgFile(null);
+                        }}
+                        className={`w-16 h-16 object-cover rounded cursor-pointer ${bgPreview===url ? 'ring-2 ring-pink-500' : ''}`}
+                      />
+                    ))}
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleBgChange} />
+                  <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">
+                    Yükle
+                  </button>
+                  {bgPreview && (
+                    <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
+                  )}
+                </div>
+                <div>
                   <label className="block mb-1">🎥 Video Linki</label>
                 <input
                   type="text"
@@ -484,7 +585,8 @@ const deleteCollection = async (collectionRef) => {
                       altText,
                       altFont,
                       altColor,
-                      videoLink
+                      videoLink,
+                      backgroundImage
                     });
                      <p className="text-green-600 mb-4">✅ Mesajınız başarıyla gönderildi 🎉</p>
                     setEditingSlug(null);

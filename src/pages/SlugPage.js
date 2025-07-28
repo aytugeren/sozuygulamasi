@@ -50,7 +50,10 @@ useEffect(() => {
  return (
     <div className="min-h-screen bg-white px-4 py-8">
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col justify-center items-center text-center relative">
+      <section
+        className="min-h-screen flex flex-col justify-center items-center text-center relative bg-cover bg-center"
+        style={page.backgroundImage ? { backgroundImage: `url(${page.backgroundImage})` } : {}}
+      >
         <p className={`italic text-xl font-${page.subtitleFont} mb-4`} style={{ color: page.subtitleColor }}>
           {page.subtitle}
         </p>
