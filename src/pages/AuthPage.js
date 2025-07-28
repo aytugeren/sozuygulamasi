@@ -3,6 +3,8 @@ import { auth } from '../databases/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { getAuthErrorMessage } from '../utils/authErrors';
+import { isPasswordValid } from '../utils/validation';
 
 const SITE_KEY = process.env.REACT_APP_GOOGLE_SITE_KEY; // reCAPTCHA v3 anahtarınız
 
@@ -17,6 +19,11 @@ const AuthForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!isPasswordValid(password)) {
+      setError('Şifre en az bir büyük harf, bir küçük harf ve bir noktalama işareti içermelidir.');
+      return;
+    }
 
     if (!executeRecaptcha) {
       setError('Recaptcha yüklenemedi');
@@ -36,7 +43,7 @@ const AuthForm = () => {
       }
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(getAuthErrorMessage(err.code));
     }
   };
 

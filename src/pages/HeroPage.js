@@ -11,6 +11,8 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import QRCode from 'react-qr-code';
 import FontSelector from '../components/FontSelector';
+import { getAuthErrorMessage } from '../utils/authErrors';
+import { isPasswordValid } from '../utils/validation';
 
 const HeroPage = () => {
   const navigate = useNavigate();
@@ -56,6 +58,14 @@ const HeroPage = () => {
 
   const handleAuth = async (e) => {
     e.preventDefault();
+
+    if (!isPasswordValid(password)) {
+      toast.error(
+        'Şifre en az bir büyük harf, bir küçük harf ve bir noktalama işareti içermelidir.'
+      );
+      return;
+    }
+
     setLoading(true);
     
     try {
@@ -65,7 +75,11 @@ const HeroPage = () => {
         toast.success('Giriş başarılı!');
       } catch (loginError) {
         // Giriş başarısızsa hesap oluştur
-        if (loginError.code === 'auth/user-not-found') {
+        if (
+          loginError.code === 'auth/user-not-found' ||
+          loginError.code === 'auth/invalid-login-credentials' ||
+          loginError.code === 'auth/invalid-credential'
+        ) {
           await createUserWithEmailAndPassword(auth, email, password);
           toast.success('Hesap oluşturuldu!');
         } else {
@@ -73,7 +87,7 @@ const HeroPage = () => {
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(getAuthErrorMessage(error.code));
     } finally {
       setLoading(false);
     }
