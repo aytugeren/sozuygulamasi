@@ -48,7 +48,7 @@ useEffect(() => {
   if (!page) return <div className="text-center py-10 text-red-600">Sayfa bulunamadı.</div>;
 
  return (
-    <div className="min-h-screen bg-white px-4 py-8">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section
         className="min-h-screen flex flex-col justify-center items-center text-center relative bg-cover bg-center"
@@ -75,7 +75,7 @@ useEffect(() => {
         </button>
       </section>
 
-      <section ref={sectionRef} className="min-h-screen flex flex-col justify-center items-center gap-6">
+      <section ref={sectionRef} className="min-h-screen flex flex-col justify-center items-center gap-6 px-4 py-8">
         <button
           onClick={() => navigate(`/${slug}/photos`)}
           className="bg-pink-500 hover:bg-pink-600 text-white text-lg px-6 py-3 rounded-xl shadow"
