@@ -262,7 +262,7 @@ const HeroPage = () => {
           url: createdPageUrl,
         });
       } catch (error) {
-        console.log('Paylaşım iptal edildi');
+        toast.error('Paylaşım iptal edildi');
       }
     } else {
       // Fallback: URL'yi panoya kopyala

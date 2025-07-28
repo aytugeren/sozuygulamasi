@@ -31,11 +31,6 @@ const AuthForm = () => {
     }
 
     try {
-      const token = await executeRecaptcha('submit');
-
-      // (Opsiyonel) Token'ı backend'e göndererek doğrulama yapabilirsiniz
-      console.log('Recaptcha token:', token);
-
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
