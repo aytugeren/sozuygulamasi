@@ -40,6 +40,7 @@ const DashboardPage = () => {
   const [bgPreview, setBgPreview] = useState('');
   const [bgUploading, setBgUploading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [previewMode, setPreviewMode] = useState('mobile');
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -227,7 +228,7 @@ const deleteCollection = async (collectionRef) => {
 
   return (
     <div className="min-h-screen bg-[#f4ecd8] px-4 py-8">
-      <div className="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <div className="max-w-5xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6 lg:flex lg:space-y-0 lg:space-x-6">
         <h1 className="text-3xl font-semibold text-center">🎛️ Kontrol Paneli</h1>
         <p className="text-sm text-center text-gray-500">Hoş geldiniz: {user.email}</p>
         <div className="text-center">
@@ -237,7 +238,17 @@ const deleteCollection = async (collectionRef) => {
           >
             {showPreview ? 'Önizlemeyi Kapat' : 'Önizlemeyi Göster'}
           </button>
+          {showPreview && (
+            <button
+              onClick={() => setPreviewMode(previewMode === 'mobile' ? 'web' : 'mobile')}
+              className="ml-2 mt-2 bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded shadow"
+            >
+              {previewMode === 'mobile' ? 'Web Önizleme' : 'Mobil Önizleme'}
+            </button>
+          )}
         </div>
+
+        <div className="flex-1 space-y-6">
 
         <div>
           <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
@@ -433,7 +444,8 @@ const deleteCollection = async (collectionRef) => {
         </div>
 
         {showPreview && (
-          <div className="flex justify-center mt-4">
+          <div className="lg:w-1/2 flex justify-center mt-4">
+            {previewMode === 'mobile' ? (
             <div className="w-[300px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
               <div
                 className="h-full flex flex-col bg-cover bg-center"
@@ -466,6 +478,13 @@ const deleteCollection = async (collectionRef) => {
                 </div>
               </div>
             </div>
+            ) : (
+              <iframe
+                src={slug ? `/${slug}` : '/'}
+                title="web preview"
+                className="w-full h-[600px] border rounded-xl"
+              />
+            )}
           </div>
         )}
         <button
@@ -754,6 +773,7 @@ const deleteCollection = async (collectionRef) => {
           >
             Çıkış Yap
           </button>
+        </div>
         </div>
       </div>
     </div>

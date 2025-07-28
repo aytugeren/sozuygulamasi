@@ -49,6 +49,7 @@ const HeroPage = () => {
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
   const [createdPageUrl, setCreatedPageUrl] = useState('');
+  const [previewMode, setPreviewMode] = useState('mobile');
 
   const handleBgChange = (e) => {
     const file = e.target.files[0];
@@ -343,7 +344,14 @@ const HeroPage = () => {
       <div className="flex flex-col lg:flex-row min-h-[80vh]">
 
         {/* Önizleme - Mobilde Üstte, Masaüstünde Sağda */}
-        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex flex-col items-center">
+          <button
+            onClick={() => setPreviewMode(previewMode === 'mobile' ? 'web' : 'mobile')}
+            className="mb-4 bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded shadow"
+          >
+            {previewMode === 'mobile' ? 'Web Önizleme' : 'Mobil Önizleme'}
+          </button>
+          {previewMode === 'mobile' ? (
           <div className="w-full max-w-[320px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
             <div className="h-full flex flex-col">
               <div
@@ -376,6 +384,13 @@ const HeroPage = () => {
               </div>
             </div>
           </div>
+          ) : (
+            <iframe
+              src={slug ? `/${slug}` : '/'}
+              title="web preview"
+              className="w-full h-[600px] border rounded-xl"
+            />
+          )}
         </div>
 
         {/* Form - Mobilde Altta, Masaüstünde Solda */}
