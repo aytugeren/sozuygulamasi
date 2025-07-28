@@ -37,6 +37,7 @@ const DashboardPage = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [bgFile, setBgFile] = useState(null);
   const [bgPreview, setBgPreview] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -217,6 +218,14 @@ const deleteCollection = async (collectionRef) => {
       <div className="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
         <h1 className="text-3xl font-semibold text-center">🎛️ Kontrol Paneli</h1>
         <p className="text-sm text-center text-gray-500">Hoş geldiniz: {user.email}</p>
+        <div className="text-center">
+          <button
+            onClick={() => setShowPreview(!showPreview)}
+            className="mt-2 bg-purple-500 hover:bg-purple-600 text-white text-sm px-4 py-2 rounded shadow"
+          >
+            {showPreview ? 'Önizlemeyi Kapat' : 'Önizlemeyi Göster'}
+          </button>
+        </div>
 
         <div>
           <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
@@ -386,21 +395,63 @@ const deleteCollection = async (collectionRef) => {
             ))}
           </div>
           <input type="file" accept="image/*" onChange={handleBgChange} />
-          <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">Yükle</button>
+          <button
+            onClick={uploadBackground}
+            className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
+          >
+            Yükle
+          </button>
           {bgPreview && (
             <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
           )}
         </div>
         <div>
           <label className="block mb-1">🎥 Video Linki</label>
-        <input
-          type="text"
-          placeholder="Alt Mesaj"
-          className="w-full border px-4 py-2 rounded"
-          value={videoLink}
-          onChange={(e) => setVideoLink(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Alt Mesaj"
+            className="w-full border px-4 py-2 rounded"
+            value={videoLink}
+            onChange={(e) => setVideoLink(e.target.value)}
+          />
         </div>
+
+        {showPreview && (
+          <div className="flex justify-center mt-4">
+            <div className="w-[300px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
+              <div
+                className="h-full flex flex-col bg-cover bg-center"
+                style={bgPreview ? { backgroundImage: `url(${bgPreview})` } : backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {}}
+              >
+                <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                  <p
+                    className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
+                    style={{ color: subtitleColor }}
+                  >
+                    {subtitle || 'Sözümüze Hoşgeldiniz...'}
+                  </p>
+                  <h1
+                    className={`text-3xl font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
+                    style={{ color: titleColor }}
+                  >
+                    {title || 'Burcu & Fatih'}
+                  </h1>
+                  <p
+                    className={`text-sm mb-8 ${altFont ? `font-${altFont}` : 'font-sans'}`}
+                    style={{ color: altColor }}
+                  >
+                    {altText || 'Bizimkisi bir aşk hikayesi..'}
+                  </p>
+                </div>
+                <div className="p-4 text-center border-t">
+                  <p className="text-xs text-gray-500">
+                    {slug ? `${window.location.origin}/${slug}` : 'sayfa-url.com/slug'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <button
           onClick={handleSave}
           className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded shadow"
@@ -555,7 +606,10 @@ const deleteCollection = async (collectionRef) => {
                     ))}
                   </div>
                   <input type="file" accept="image/*" onChange={handleBgChange} />
-                  <button onClick={uploadBackground} className="text-blue-600 text-sm ml-2 underline">
+                  <button
+                    onClick={uploadBackground}
+                    className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
+                  >
                     Yükle
                   </button>
                   {bgPreview && (

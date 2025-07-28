@@ -13,6 +13,7 @@ import QRCode from 'react-qr-code';
 import FontSelector from '../components/FontSelector';
 import { getAuthErrorMessage } from '../utils/authErrors';
 import { isPasswordValid } from '../utils/validation';
+import { BACKGROUND_TEMPLATES } from '../utils/backgroundTemplates';
 
 const HeroPage = () => {
   const navigate = useNavigate();
@@ -31,6 +32,9 @@ const HeroPage = () => {
   const [videoLink, setVideoLink] = useState('');
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState('');
+  const [bgFile, setBgFile] = useState(null);
+  const [bgPreview, setBgPreview] = useState('');
   
   // Font ve renk state'leri
   const [titleFont, setTitleFont] = useState('romantic');
@@ -43,6 +47,50 @@ const HeroPage = () => {
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
   const [createdPageUrl, setCreatedPageUrl] = useState('');
+
+  const handleBgChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const forbiddenExt = ['exe', 'bat', 'js', 'sh', 'php', 'py', 'pl', 'rb', 'jar'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (forbiddenExt.includes(ext) || !allowedTypes.includes(file.type)) {
+      alert('Yalnızca resim dosyaları yükleyebilirsiniz.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Dosya boyutu 5MB\u0027ı geçemez.');
+      return;
+    }
+
+    setBgFile(file);
+    setBgPreview(URL.createObjectURL(file));
+  };
+
+  const uploadBackground = async () => {
+    if (!bgFile) return;
+    const data = new FormData();
+    const fileName = bgFile.name.replace(/\s+/g, '-');
+    const cloudinaryName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+    data.append('file', bgFile);
+    data.append('upload_preset', 'soz-uygulamasi');
+    data.append('public_id', `${user.uid}/background-${Date.now()}-${fileName}`);
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`, {
+        method: 'POST',
+        body: data
+      });
+      const result = await res.json();
+      if (result.secure_url) {
+        setBackgroundImage(result.secure_url);
+        setBgPreview(result.secure_url);
+        setBgFile(null);
+      }
+    } catch (err) {
+      console.error('Cloudinary upload failed', err);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -142,7 +190,7 @@ const HeroPage = () => {
         subtitle: subtitle || 'Özel gününüzü kutluyoruz',
         altText: altText || 'Teşekkürler',
         videoLink: videoLink || '',
-        backgroundImage: '',
+        backgroundImage: backgroundImage || '',
         createdAt: new Date(),
         titleFont,
         titleColor,
@@ -189,6 +237,9 @@ const HeroPage = () => {
     setSubtitleColor('#555555');
     setAltFont('sans');
     setAltColor('#888888');
+    setBackgroundImage('');
+    setBgPreview('');
+    setBgFile(null);
   };
 
   const handleShare = async () => {
@@ -283,7 +334,10 @@ const HeroPage = () => {
         <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex items-center justify-center">
           <div className="w-full max-w-[320px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
             <div className="h-full flex flex-col">
-              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+              <div
+                className="flex-1 p-8 flex flex-col items-center justify-center text-center bg-cover bg-center"
+                style={bgPreview ? { backgroundImage: `url(${bgPreview})` } : backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : {}}
+              >
                 <p
                   className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
                   style={{ color: subtitleColor }}
@@ -453,21 +507,51 @@ const HeroPage = () => {
                   label="Alt Yazı Tipi"
                   showPreview={false}
                 />
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Alt Yazı Rengi</label>
-                  <input
-                    type="color"
-                    value={altColor}
-                    onChange={(e) => setAltColor(e.target.value)}
-                    className="w-full h-10 border border-gray-300 rounded-lg"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Video Linki (isteğe bağlı)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Alt Yazı Rengi</label>
                 <input
-                  type="url"
+                  type="color"
+                  value={altColor}
+                  onChange={(e) => setAltColor(e.target.value)}
+                  className="w-full h-10 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Arka Plan Görseli</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {BACKGROUND_TEMPLATES.map((url) => (
+                  <img
+                    key={url}
+                    src={url}
+                    alt="template"
+                    onClick={() => {
+                      setBackgroundImage(url);
+                      setBgPreview(url);
+                      setBgFile(null);
+                    }}
+                    className={`w-16 h-16 object-cover rounded cursor-pointer ${bgPreview===url ? 'ring-2 ring-pink-500' : ''}`}
+                  />
+                ))}
+              </div>
+              <input type="file" accept="image/*" onChange={handleBgChange} />
+              <button
+                onClick={uploadBackground}
+                type="button"
+                className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-3 py-1 rounded ml-2 shadow"
+              >
+                Yükle
+              </button>
+              {bgPreview && (
+                <div className="mt-2 h-32 rounded bg-cover bg-center" style={{ backgroundImage: `url(${bgPreview})` }} />
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Video Linki (isteğe bağlı)</label>
+              <input
+                type="url"
                   value={videoLink}
                   onChange={(e) => setVideoLink(e.target.value)}
                   placeholder="https://youtube.com/watch?v=..."
