@@ -141,7 +141,7 @@ useEffect(() => {
           orderBy('createdAt', 'desc')
         );
         const snapshot = await getDocs(q);
-        const list = snapshot.docs.map(doc => doc.data());
+        const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setMessages(list);
       }
     } catch (error) {
@@ -169,6 +169,17 @@ useEffect(() => {
     document.addEventListener('fullscreenchange', exitHandler);
     return () => document.removeEventListener('fullscreenchange', exitHandler);
   }, []);
+
+  useEffect(() => {
+    let interval;
+    if (liveMode) {
+      fetchMessages();
+      interval = setInterval(fetchMessages, 5000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [liveMode, fetchMessages]);
 
   const handleSubmit = async (e, token) => {
     e.preventDefault();
@@ -249,7 +260,7 @@ if (liveMode) {
 <div className="w-full max-w-2xl px-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
   {messages.slice(0, 4).map((msg, index) => (
     <div
-      key={index}
+      key={msg.id || index}
       className={`bg-white bg-opacity-80 border border-pink-100 rounded-2xl p-6 mb-6 text-center shadow-lg text-2xl ${animatedMessageClass}`}
       style={{
         animationDelay: `${index * 0.2}s`,
@@ -295,7 +306,7 @@ if (liveMode) {
         <h2 className="text-xl font-semibold mb-2 text-left">📜 Dilekler ({messages.length})</h2>
     <div className="space-y-4">
         {paginatedMessages.map((msg, index) => (
-          <div key={index} className="bg-gray-100 border border-gray-300 rounded-lg p-4 text-left shadow">
+          <div key={msg.id || index} className="bg-gray-100 border border-gray-300 rounded-lg p-4 text-left shadow">
             <p className="text-sm text-gray-800 mb-1 font-semibold">💬 {msg.name} {msg.emoji}</p>
             <p className="text-gray-700 whitespace-pre-line">{msg.message}</p>
           </div>
