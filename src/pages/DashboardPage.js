@@ -192,7 +192,7 @@ const deleteCollection = async (collectionRef) => {
   if (loading) return <div className="text-center p-10">Yükleniyor...</div>;
 
   return (
-    <div className="min-h-screen bg-[#f4ecd8] px-4 py-8">
+    <div className="min-h-screen bg-[#f4ecd8] px-4 py-8 pb-32">
       <div className="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
         <h1 className="text-3xl font-semibold text-center">🎛️ Kontrol Paneli</h1>
         <p className="text-sm text-center text-gray-500">Hoş geldiniz: {user.email}</p>
