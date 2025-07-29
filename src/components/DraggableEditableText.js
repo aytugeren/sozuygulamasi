@@ -35,11 +35,20 @@ const DraggableEditableText = ({
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  const isDefault = position.x === 0 && position.y === 0;
+
   return (
     <span
       onMouseDown={handleMouseDown}
       onDoubleClick={() => setEditing(true)}
-      style={{ position: 'absolute', left: position.x, top: position.y, cursor: editing ? 'text' : 'move', ...style }}
+      style={{
+        position: 'absolute',
+        left: isDefault ? '50%' : position.x,
+        top: isDefault ? '50%' : position.y,
+        transform: isDefault ? 'translate(-50%, -50%)' : undefined,
+        cursor: editing ? 'text' : 'move',
+        ...style,
+      }}
       className={className}
     >
       {editing ? (

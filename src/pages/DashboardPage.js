@@ -43,6 +43,7 @@ const DashboardPage = () => {
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrValue, setQrValue] = useState('');
   const [previewType, setPreviewType] = useState('phone');
+  const [updating, setUpdating] = useState(false);
 
 const qrRef = useRef(null);
 const invalidSlugRegex = /[^a-zA-Z-]/;
@@ -432,12 +433,14 @@ const deleteCollection = async (collectionRef) => {
           onChange={(e) => setVideoLink(e.target.value)}
         />
         </div>
-        <button
-          onClick={handleSave}
-          className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded shadow"
-        >
-          🚀 Sayfa Kaydet
-        </button>
+        {editingSlug === null && (
+          <button
+            onClick={handleSave}
+            className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded shadow"
+          >
+            🚀 Sayfa Kaydet
+          </button>
+        )}
 
           {pages.length > 0 && (
             <div className="bg-gray-100 rounded p-4 mt-6">
@@ -581,6 +584,7 @@ const deleteCollection = async (collectionRef) => {
                 </div>
                 <button
                   onClick={async () => {
+                    setUpdating(true);
                     const ref = doc(db, 'users', user.uid, 'pages', p.slug);
                     await updateDoc(ref, {
                       title,
@@ -597,11 +601,13 @@ const deleteCollection = async (collectionRef) => {
                       altTextPos,
                       videoLink
                     });
-                     <p className="text-green-600 mb-4">✅ Mesajınız başarıyla gönderildi 🎉</p>
+                    toast.success('Sayfa güncellendi!');
                     setEditingSlug(null);
                     fetchUserPages();
+                    setUpdating(false);
                   }}
-                  className="bg-blue-600 text-white px-4 py-2 rounded shadow"
+                  className={`bg-blue-600 text-white px-4 py-2 rounded shadow ${updating ? 'animate-pulse' : ''}`}
+                  disabled={updating}
                 >
                   💾 Güncelle
                 </button>
