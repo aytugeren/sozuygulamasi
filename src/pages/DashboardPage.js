@@ -571,16 +571,16 @@ const deleteCollection = async (collectionRef) => {
           </div>
         )}
 
-        <div className="text-center pt-4 space-y-2">
+        <div className="flex justify-center gap-4 pt-8">
           <button
             onClick={() => navigate('/')}
-            className="text-blue-600 underline hover:text-blue-700 text-sm"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow transition"
           >
             Ana Sayfaya Dön
           </button>
           <button
             onClick={handleLogout}
-            className="text-red-500 underline hover:text-red-600 text-sm"
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow transition"
           >
             Çıkış Yap
           </button>
