@@ -571,7 +571,13 @@ const deleteCollection = async (collectionRef) => {
           </div>
         )}
 
-        <div className="text-center pt-4">
+        <div className="text-center pt-4 space-y-2">
+          <button
+            onClick={() => navigate('/')}
+            className="text-blue-600 underline hover:text-blue-700 text-sm"
+          >
+            Ana Sayfaya Dön
+          </button>
           <button
             onClick={handleLogout}
             className="text-red-500 underline hover:text-red-600 text-sm"
