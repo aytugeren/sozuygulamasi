@@ -345,7 +345,7 @@ const deleteCollection = async (collectionRef) => {
               <div className="flex items-center gap-2">
                 <a
                   href={`/${p.slug}`}
-                  className="text-blue-600 underline text-sm"
+                  className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded shadow"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -356,9 +356,9 @@ const deleteCollection = async (collectionRef) => {
                     setQrValue(`${window.location.origin}/${p.slug}`);
                     setQrModalOpen(true);
                   }}
-                  className="text-green-600 text-sm hover:underline"
+                  className="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1 rounded shadow"
                 >
-                  QR Kod Oluştur
+                  QR
                 </button>
                 <button
                   onClick={() => {
@@ -374,13 +374,13 @@ const deleteCollection = async (collectionRef) => {
                     setVideoLink(p.videoLink || '');
                     setAltText(p.altText || '');
                   }}
-                  className="text-yellow-600 text-sm hover:underline"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-1 rounded shadow"
                 >
                   Düzenle
                 </button>
                 <button
                   onClick={() => handleDelete(p.slug)}
-                  className="text-red-500 text-sm hover:underline"
+                  className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1 rounded shadow"
                 >
                   Sil
                 </button>
