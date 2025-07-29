@@ -54,7 +54,13 @@ useEffect(() => {
         {page.subtitlePos ? (
           <p
             className={`italic text-xl font-${page.subtitleFont} mb-4 absolute`}
-            style={{ color: page.subtitleColor, left: page.subtitlePos.x, top: page.subtitlePos.y }}
+            style={{
+              color: page.subtitleColor,
+              left: page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? '50%' : page.subtitlePos.x,
+              top: page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? '50%' : page.subtitlePos.y,
+              transform:
+                page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? 'translate(-50%, -50%)' : undefined,
+            }}
           >
             {page.subtitle}
           </p>
@@ -66,7 +72,13 @@ useEffect(() => {
         {page.titlePos ? (
           <h1
             className={`text-5xl font-${page.titleFont} mb-3 absolute`}
-            style={{ color: page.titleColor, left: page.titlePos.x, top: page.titlePos.y }}
+            style={{
+              color: page.titleColor,
+              left: page.titlePos.x === 0 && page.titlePos.y === 0 ? '50%' : page.titlePos.x,
+              top: page.titlePos.x === 0 && page.titlePos.y === 0 ? '50%' : page.titlePos.y,
+              transform:
+                page.titlePos.x === 0 && page.titlePos.y === 0 ? 'translate(-50%, -50%)' : undefined,
+            }}
           >
             {page.title}
           </h1>
@@ -78,7 +90,13 @@ useEffect(() => {
         {page.altTextPos ? (
           <p
             className={`text-base font-${page.altFont} mt-4 absolute`}
-            style={{ color: page.altColor, left: page.altTextPos.x, top: page.altTextPos.y }}
+            style={{
+              color: page.altColor,
+              left: page.altTextPos.x === 0 && page.altTextPos.y === 0 ? '50%' : page.altTextPos.x,
+              top: page.altTextPos.x === 0 && page.altTextPos.y === 0 ? '50%' : page.altTextPos.y,
+              transform:
+                page.altTextPos.x === 0 && page.altTextPos.y === 0 ? 'translate(-50%, -50%)' : undefined,
+            }}
           >
             {page.altText}
           </p>
