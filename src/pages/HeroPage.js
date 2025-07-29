@@ -481,6 +481,12 @@ const HeroPage = () => {
               >
                 {loading ? 'Oluşturuluyor...' : 'Sayfayı Oluştur'}
               </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg"
+              >
+                Dashboard'a Geç
+              </button>
             </div>
           )}
         </div>
