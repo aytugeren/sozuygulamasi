@@ -107,7 +107,6 @@ const PhotoPage = () => {
       data.append("upload_preset", "soz-uygulamasi");
       data.append("folder", slug);
       data.append("public_id", `${slug}/${Date.now()}-${fileName}`);
-      data.append("moderation", "webpurify");
 
       try {
         const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryName}/auto/upload`, {
