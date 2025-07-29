@@ -34,6 +34,9 @@ const DashboardPage = () => {
   const [altText, setAltText] = useState('');
   const [altFont, setAltFont] = useState('sans');
   const [altColor, setAltColor] = useState('#888888');
+  const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
+  const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
+  const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
   const [videoLink, setVideoLink] = useState('');
   const [slugExists, setSlugExists] = useState(false);
   const [slugMessage, setSlugMessage] = useState('');
@@ -142,6 +145,9 @@ const deleteCollection = async (collectionRef) => {
       altText,
       altFont,
       altColor,
+      titlePos,
+      subtitlePos,
+      altTextPos,
       videoLink,
       createdAt: new Date(),
     });
@@ -151,7 +157,11 @@ const deleteCollection = async (collectionRef) => {
     setSlug('');
     setTitle('');
     setSubtitle('');
+    setTitlePos({ x: 0, y: 0 });
+    setSubtitlePos({ x: 0, y: 0 });
+    setAltTextPos({ x: 0, y: 0 });
     setVideoLink('');
+    setAltText('');
   };
 
   const handleLogout = async () => {
@@ -227,6 +237,15 @@ const deleteCollection = async (collectionRef) => {
               subtitleColor={subtitleColor}
               altFont={altFont}
               altColor={altColor}
+              onTitleChange={setTitle}
+              onSubtitleChange={setSubtitle}
+              onAltTextChange={setAltText}
+              titlePos={titlePos}
+              subtitlePos={subtitlePos}
+              altTextPos={altTextPos}
+              onTitlePosChange={setTitlePos}
+              onSubtitlePosChange={setSubtitlePos}
+              onAltTextPosChange={setAltTextPos}
             />
           ) : (
             <WebPreview
@@ -240,6 +259,15 @@ const deleteCollection = async (collectionRef) => {
               subtitleColor={subtitleColor}
               altFont={altFont}
               altColor={altColor}
+              onTitleChange={setTitle}
+              onSubtitleChange={setSubtitle}
+              onAltTextChange={setAltText}
+              titlePos={titlePos}
+              subtitlePos={subtitlePos}
+              altTextPos={altTextPos}
+              onTitlePosChange={setTitlePos}
+              onSubtitlePosChange={setSubtitlePos}
+              onAltTextPosChange={setAltTextPos}
             />
           )}
         </div>
@@ -450,6 +478,9 @@ const deleteCollection = async (collectionRef) => {
                     setSubtitleFont(p.subtitleFont || 'sans');
                     setVideoLink(p.videoLink || '');
                     setAltText(p.altText || '');
+                    setTitlePos(p.titlePos || { x: 0, y: 0 });
+                    setSubtitlePos(p.subtitlePos || { x: 0, y: 0 });
+                    setAltTextPos(p.altTextPos || { x: 0, y: 0 });
                   }}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-1 rounded shadow"
                 >
@@ -561,6 +592,9 @@ const deleteCollection = async (collectionRef) => {
                       altText,
                       altFont,
                       altColor,
+                      titlePos,
+                      subtitlePos,
+                      altTextPos,
                       videoLink
                     });
                      <p className="text-green-600 mb-4">✅ Mesajınız başarıyla gönderildi 🎉</p>

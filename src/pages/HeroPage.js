@@ -41,6 +41,9 @@ const HeroPage = () => {
   const [subtitleColor, setSubtitleColor] = useState('#555555');
   const [altFont, setAltFont] = useState('modern');
   const [altColor, setAltColor] = useState('#888888');
+  const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
+  const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
+  const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
   
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
@@ -152,7 +155,10 @@ const HeroPage = () => {
         subtitleFont,
         subtitleColor,
         altFont,
-        altColor
+        altColor,
+        titlePos,
+        subtitlePos,
+        altTextPos
       });
 
       // Kullanıcıyı initialized olarak işaretle
@@ -192,6 +198,9 @@ const HeroPage = () => {
     setSubtitleColor('#555555');
     setAltFont('sans');
     setAltColor('#888888');
+    setTitlePos({ x: 0, y: 0 });
+    setSubtitlePos({ x: 0, y: 0 });
+    setAltTextPos({ x: 0, y: 0 });
   };
 
   const handleShare = async () => {
@@ -310,6 +319,15 @@ const HeroPage = () => {
               subtitleColor={subtitleColor}
               altFont={altFont}
               altColor={altColor}
+              onTitleChange={setTitle}
+              onSubtitleChange={setSubtitle}
+              onAltTextChange={setAltText}
+              titlePos={titlePos}
+              subtitlePos={subtitlePos}
+              altTextPos={altTextPos}
+              onTitlePosChange={setTitlePos}
+              onSubtitlePosChange={setSubtitlePos}
+              onAltTextPosChange={setAltTextPos}
             />
           ) : (
             <WebPreview
@@ -323,6 +341,15 @@ const HeroPage = () => {
               subtitleColor={subtitleColor}
               altFont={altFont}
               altColor={altColor}
+              onTitleChange={setTitle}
+              onSubtitleChange={setSubtitle}
+              onAltTextChange={setAltText}
+              titlePos={titlePos}
+              subtitlePos={subtitlePos}
+              altTextPos={altTextPos}
+              onTitlePosChange={setTitlePos}
+              onSubtitlePosChange={setSubtitlePos}
+              onAltTextPosChange={setAltTextPos}
             />
           )}
         </div>
