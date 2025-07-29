@@ -22,7 +22,7 @@ const WebPreview = ({
   onSubtitlePosChange,
   onAltTextPosChange,
 }) => (
-  <div className="flex flex-col w-full max-w-xl h-[600px] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
+  <div className="flex flex-col w-full max-w-[640px] h-[720px] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
     <div className="bg-gray-100 flex items-center px-4 py-2 space-x-1 border-b">
       <span className="w-3 h-3 bg-red-500 rounded-full" />
       <span className="w-3 h-3 bg-yellow-500 rounded-full" />
