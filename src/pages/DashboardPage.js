@@ -334,15 +334,15 @@ const deleteCollection = async (collectionRef) => {
           🚀 Sayfa Kaydet
         </button>
 
-        {pages.length > 0 && (
-          <div className="bg-gray-100 rounded p-4 mt-6">
-            <h2 className="text-lg font-semibold mb-2">📄 Sayfalarım</h2>
-            <ul className="space-y-1">
-              {pages.map((p) => (
-          <li key={p.slug} className="flex flex-col gap-1 border-b pb-2 mb-2">
-            <div className="flex justify-between items-center">
-              <span>🔗 {p.slug}</span>
-              <div className="flex items-center gap-2">
+          {pages.length > 0 && (
+            <div className="bg-gray-100 rounded p-4 mt-6">
+              <h2 className="text-lg font-semibold mb-2">📄 Sayfalarım</h2>
+              <ul className="space-y-1">
+                {pages.map((p) => (
+            <li key={p.slug} className="flex flex-col gap-1 border-b pb-2 mb-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
+                <span className="break-words">🔗 {p.slug}</span>
+                <div className="flex flex-wrap items-center gap-2 mt-2 sm:mt-0">
                 <a
                   href={`/${p.slug}`}
                   className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded shadow"
