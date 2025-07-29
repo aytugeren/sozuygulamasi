@@ -45,7 +45,7 @@ const HeroPage = () => {
   const [createdPageUrl, setCreatedPageUrl] = useState('');
 
   const PhonePreview = () => (
-    <div className="block lg:hidden w-full max-w-[320px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
+    <div className="block w-full max-w-[320px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
       <div className="h-full flex flex-col">
         <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
           <p
@@ -77,7 +77,12 @@ const HeroPage = () => {
   );
 
   const WebPreview = () => (
-    <div className="hidden lg:flex w-full max-w-xl h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
+    <div className="hidden lg:flex flex-col w-full max-w-xl h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+      <div className="bg-gray-100 px-4 py-2 border-b">
+        <p className="text-xs text-gray-500 text-center">
+          {slug ? `${window.location.origin}/${slug}` : 'sayfa-url.com/slug'}
+        </p>
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center text-center px-10 relative">
         <p
           className={`italic text-xl mb-4 ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
@@ -97,14 +102,15 @@ const HeroPage = () => {
         >
           {altText || 'Bizimkisi bir aşk hikayesi..'}
         </p>
-        <svg className="w-8 h-8 text-gray-500 absolute bottom-4 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <svg
+          className="w-8 h-8 text-gray-500 absolute bottom-4 animate-bounce"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-      </div>
-      <div className="p-4 text-center border-t">
-        <p className="text-sm text-gray-500">
-          {slug ? `${window.location.origin}/${slug}` : 'sayfa-url.com/slug'}
-        </p>
       </div>
     </div>
   );
@@ -344,7 +350,7 @@ const HeroPage = () => {
       <div className="flex flex-col lg:flex-row min-h-[80vh]">
 
         {/* Önizleme - Mobilde Üstte, Masaüstünde Sağda */}
-        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex flex-col lg:flex-row items-center justify-center gap-6">
           <PhonePreview />
           <WebPreview />
         </div>
