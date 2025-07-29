@@ -5,6 +5,8 @@ import { auth, db } from '../databases/firebase';
 import { useNavigate } from 'react-router-dom';
 import QRCode from "react-qr-code";
 import { toPng } from 'html-to-image';
+import PhonePreview from '../components/Preview/PhonePreview';
+import WebPreview from '../components/Preview/WebPreview';
 import {
   collection,
   getDocs,
@@ -37,6 +39,7 @@ const DashboardPage = () => {
   const [slugMessage, setSlugMessage] = useState('');
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrValue, setQrValue] = useState('');
+  const [previewType, setPreviewType] = useState('phone');
 
 const qrRef = useRef(null);
 const invalidSlugRegex = /[^a-zA-Z-]/;
@@ -196,6 +199,50 @@ const deleteCollection = async (collectionRef) => {
       <div className="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
         <h1 className="text-3xl font-semibold text-center">🎛️ Kontrol Paneli</h1>
         <p className="text-sm text-center text-gray-500">Hoş geldiniz: {user.email}</p>
+
+        <div className="flex flex-col items-center">
+          <div className="flex space-x-2 mb-4">
+            <button
+              onClick={() => setPreviewType('phone')}
+              className={`px-3 py-1 rounded-lg border ${previewType === 'phone' ? 'bg-pink-500 text-white border-pink-500' : 'bg-white text-gray-700'}`}
+            >
+              Mobil
+            </button>
+            <button
+              onClick={() => setPreviewType('web')}
+              className={`px-3 py-1 rounded-lg border ${previewType === 'web' ? 'bg-pink-500 text-white border-pink-500' : 'bg-white text-gray-700'}`}
+            >
+              Web
+            </button>
+          </div>
+          {previewType === 'phone' ? (
+            <PhonePreview
+              slug={slug}
+              title={title}
+              subtitle={subtitle}
+              altText={altText}
+              titleFont={titleFont}
+              titleColor={titleColor}
+              subtitleFont={subtitleFont}
+              subtitleColor={subtitleColor}
+              altFont={altFont}
+              altColor={altColor}
+            />
+          ) : (
+            <WebPreview
+              slug={slug}
+              title={title}
+              subtitle={subtitle}
+              altText={altText}
+              titleFont={titleFont}
+              titleColor={titleColor}
+              subtitleFont={subtitleFont}
+              subtitleColor={subtitleColor}
+              altFont={altFont}
+              altColor={altColor}
+            />
+          )}
+        </div>
 
         <div>
           <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
