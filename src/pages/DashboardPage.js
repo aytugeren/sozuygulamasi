@@ -66,13 +66,11 @@ const deleteCollection = async (collectionRef) => {
   await Promise.all(promises);
 };
 
- const handleDelete = async (slugToDelete) => {
+ const handleDeleteConfirmed = async (slugToDelete) => {
   if (!user || !user.uid || !slugToDelete) {
     toast.error("Silme işlemi için kullanıcı ve slug bilgisi gerekli!");
     return;
   }
-  const confirmed = window.confirm(`"${slugToDelete}" sayfasını silmek istediğinizden emin misiniz?`);
-  if (!confirmed) return;
 
   const pageRef = doc(db, 'users', user.uid, 'pages', slugToDelete);
   const slugRef = doc(db, 'slugs', slugToDelete);
@@ -83,7 +81,39 @@ const deleteCollection = async (collectionRef) => {
   await deleteDoc(slugRef);
 
   await fetchUserPages();
-};
+ };
+
+ const handleDelete = (slugToDelete) => {
+   if (!user || !user.uid || !slugToDelete) {
+     toast.error("Silme işlemi için kullanıcı ve slug bilgisi gerekli!");
+     return;
+   }
+   toast.info(
+     ({ closeToast }) => (
+       <div>
+         <p>{`"${slugToDelete}" sayfasını silmek istediğinizden emin misiniz?`}</p>
+         <div className="flex justify-end gap-2 mt-2">
+           <button
+             onClick={async () => {
+               await handleDeleteConfirmed(slugToDelete);
+               closeToast();
+             }}
+             className="bg-red-600 text-white px-2 py-1 rounded"
+           >
+             Sil
+           </button>
+           <button
+             onClick={closeToast}
+             className="bg-gray-300 px-2 py-1 rounded"
+           >
+             Vazgeç
+           </button>
+         </div>
+       </div>
+     ),
+     { autoClose: false }
+   );
+ };
 
   const handleSave = async () => {
     if (!slug) return;
