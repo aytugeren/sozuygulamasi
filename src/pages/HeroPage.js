@@ -43,6 +43,7 @@ const HeroPage = () => {
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
   const [createdPageUrl, setCreatedPageUrl] = useState('');
+  const [previewType, setPreviewType] = useState('phone');
 
   const PhonePreview = () => (
     <div className="block w-full max-w-[320px] h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white">
@@ -352,10 +353,23 @@ const HeroPage = () => {
     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-y-auto">
       <div className="flex flex-col lg:flex-row min-h-[80vh]">
 
-        {/* Önizleme - Mobilde Üstte, Masaüstünde Sağda */}
-        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex flex-col lg:flex-row items-center justify-center gap-6">
-          <PhonePreview />
-          <WebPreview />
+        {/* Önizleme - Kullanıcı seçimine göre */}
+        <div className="w-full lg:w-1/2 bg-gradient-to-br from-pink-50 to-purple-50 p-6 flex flex-col items-center justify-center gap-6">
+          <div className="flex space-x-2 mb-4">
+            <button
+              onClick={() => setPreviewType('phone')}
+              className={`px-3 py-1 rounded-lg border ${previewType === 'phone' ? 'bg-pink-500 text-white border-pink-500' : 'bg-white text-gray-700'}`}
+            >
+              Mobil
+            </button>
+            <button
+              onClick={() => setPreviewType('web')}
+              className={`px-3 py-1 rounded-lg border ${previewType === 'web' ? 'bg-pink-500 text-white border-pink-500' : 'bg-white text-gray-700'}`}
+            >
+              Web
+            </button>
+          </div>
+          {previewType === 'phone' ? <PhonePreview /> : <WebPreview />}
         </div>
 
         {/* Form - Mobilde Altta, Masaüstünde Solda */}
