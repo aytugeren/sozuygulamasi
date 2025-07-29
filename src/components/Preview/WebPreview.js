@@ -1,4 +1,5 @@
 import React from 'react';
+import DraggableEditableText from '../DraggableEditableText';
 
 const WebPreview = ({
   slug,
@@ -10,7 +11,16 @@ const WebPreview = ({
   subtitleFont,
   subtitleColor,
   altFont,
-  altColor
+  altColor,
+  onTitleChange,
+  onSubtitleChange,
+  onAltTextChange,
+  titlePos,
+  subtitlePos,
+  altTextPos,
+  onTitlePosChange,
+  onSubtitlePosChange,
+  onAltTextPosChange,
 }) => (
   <div className="flex flex-col w-full max-w-xl h-[600px] bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
     <div className="bg-gray-100 flex items-center px-4 py-2 space-x-1 border-b">
@@ -22,24 +32,30 @@ const WebPreview = ({
       </p>
     </div>
     <div className="flex-1 flex flex-col items-center justify-center text-center px-10 relative">
-      <p
+      <DraggableEditableText
+        text={subtitle || 'Sözümüze Hoşgeldiniz...'}
+        onChange={onSubtitleChange}
         className={`italic text-xl mb-4 ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
         style={{ color: subtitleColor }}
-      >
-        {subtitle || 'Sözümüze Hoşgeldiniz...'}
-      </p>
-      <h1
+        pos={subtitlePos}
+        onPosChange={onSubtitlePosChange}
+      />
+      <DraggableEditableText
+        text={title || 'Burcu & Fatih'}
+        onChange={onTitleChange}
         className={`text-5xl font-bold mb-3 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
         style={{ color: titleColor }}
-      >
-        {title || 'Burcu & Fatih'}
-      </h1>
-      <p
+        pos={titlePos}
+        onPosChange={onTitlePosChange}
+      />
+      <DraggableEditableText
+        text={altText || 'Bizimkisi bir aşk hikayesi..'}
+        onChange={onAltTextChange}
         className={`text-base mt-4 ${altFont ? `font-${altFont}` : 'font-sans'}`}
         style={{ color: altColor }}
-      >
-        {altText || 'Bizimkisi bir aşk hikayesi..'}
-      </p>
+        pos={altTextPos}
+        onPosChange={onAltTextPosChange}
+      />
       <svg
         className="w-8 h-8 text-gray-500 absolute bottom-4 animate-bounce"
         fill="none"

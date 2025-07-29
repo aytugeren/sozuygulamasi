@@ -51,15 +51,42 @@ useEffect(() => {
     <div className="min-h-screen bg-white px-4 py-8">
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center relative">
-        <p className={`italic text-xl font-${page.subtitleFont} mb-4`} style={{ color: page.subtitleColor }}>
-          {page.subtitle}
-        </p>
-        <h1 className={`text-5xl font-${page.titleFont} mb-3`} style={{ color: page.titleColor }}>
-          {page.title}
-        </h1>
-        <p className={`text-base font-${page.altFont} mt-4`} style={{ color: page.altColor }}>
-          {page.altText}
-        </p>
+        {page.subtitlePos ? (
+          <p
+            className={`italic text-xl font-${page.subtitleFont} mb-4 absolute`}
+            style={{ color: page.subtitleColor, left: page.subtitlePos.x, top: page.subtitlePos.y }}
+          >
+            {page.subtitle}
+          </p>
+        ) : (
+          <p className={`italic text-xl font-${page.subtitleFont} mb-4`} style={{ color: page.subtitleColor }}>
+            {page.subtitle}
+          </p>
+        )}
+        {page.titlePos ? (
+          <h1
+            className={`text-5xl font-${page.titleFont} mb-3 absolute`}
+            style={{ color: page.titleColor, left: page.titlePos.x, top: page.titlePos.y }}
+          >
+            {page.title}
+          </h1>
+        ) : (
+          <h1 className={`text-5xl font-${page.titleFont} mb-3`} style={{ color: page.titleColor }}>
+            {page.title}
+          </h1>
+        )}
+        {page.altTextPos ? (
+          <p
+            className={`text-base font-${page.altFont} mt-4 absolute`}
+            style={{ color: page.altColor, left: page.altTextPos.x, top: page.altTextPos.y }}
+          >
+            {page.altText}
+          </p>
+        ) : (
+          <p className={`text-base font-${page.altFont} mt-4`} style={{ color: page.altColor }}>
+            {page.altText}
+          </p>
+        )}
 
         {/* Scroll down arrow */}
         <button
