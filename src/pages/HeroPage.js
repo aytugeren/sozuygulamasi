@@ -244,9 +244,9 @@ const HeroPage = () => {
                   Demo Sayfasını Gör
                 </button>
               </a>
-              <button 
+              <button
                 onClick={() => setShowModal(true)}
-                className="bg-white hover:bg-gray-100 text-pink-500 font-medium py-3 px-6 rounded-xl border border-pink-500 shadow"
+                className="bg-white hover:bg-gray-100 text-pink-500 font-medium py-3 px-6 rounded-xl border border-pink-500 shadow animate-pulse"
               >
                 Hemen Başla
               </button>
