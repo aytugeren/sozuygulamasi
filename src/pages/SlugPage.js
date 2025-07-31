@@ -60,11 +60,13 @@ useEffect(() => {
       if (!rect) return;
       const { width, height } = rect;
       const base = width < 500 ? PREVIEW_DIMENSIONS.phone : PREVIEW_DIMENSIONS.web;
+      const clamp = (val, max) => Math.min(Math.max(val, 0), max);
       const scale = (pos, ratio) =>
         pos
           ? {
-              x: (pos.x * width) / base.width,
-              y: (pos.y * height) / base.height,
+              x: clamp((pos.x * width) / base.width, width),
+              y: clamp((pos.y * height) / base.height, height),
+
             }
           : { x: width / 2, y: height * ratio };
       setScaledTitlePos(scale(page.titlePos, DEFAULT_RATIOS.title));

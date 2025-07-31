@@ -73,12 +73,13 @@ const HeroPage = () => {
     if (prevType === previewType) return;
     const prevDim = PREVIEW_DIMENSIONS[prevType];
     const nextDim = PREVIEW_DIMENSIONS[previewType];
+    const clamp = (val, max) => Math.min(Math.max(val, 0), max);
     const scale = (pos) =>
       pos.x === 0 && pos.y === 0
         ? pos
         : {
-            x: (pos.x * nextDim.width) / prevDim.width,
-            y: (pos.y * nextDim.height) / prevDim.height,
+            x: clamp((pos.x * nextDim.width) / prevDim.width, nextDim.width),
+            y: clamp((pos.y * nextDim.height) / prevDim.height, nextDim.height),
           };
     setTitlePos((p) => scale(p));
     setSubtitlePos((p) => scale(p));
@@ -391,7 +392,7 @@ const HeroPage = () => {
               onAltTextPosChange={setAltTextPos}
             />
           ) : (
-            <WebPreview
+          <WebPreview
               ref={previewRef}
               slug={slug}
               title={title}
@@ -414,6 +415,16 @@ const HeroPage = () => {
               onAltTextPosChange={setAltTextPos}
             />
           )}
+          <button
+            onClick={() => {
+              setTitlePos(defaultPositions.current.title);
+              setSubtitlePos(defaultPositions.current.subtitle);
+              setAltTextPos(defaultPositions.current.altText);
+            }}
+            className="mt-2 mb-4 bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded"
+          >
+            Konumları Sıfırla
+          </button>
         </div>
 
         {/* Form - Mobilde Altta, Masaüstünde Solda */}
