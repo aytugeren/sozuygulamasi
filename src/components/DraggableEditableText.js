@@ -8,10 +8,26 @@ const DraggableEditableText = ({
   pos = { x: 0, y: 0 },
   onPosChange,
   centerX = false,
+  placeholder = '',
+  touched = false,
+  size,
+  onSizeChange,
 }) => {
   const [editing, setEditing] = useState(false);
+  const [selected, setSelected] = useState(false);
   const [position, setPosition] = useState(pos);
   const start = useRef({ x: 0, y: 0 });
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!wrapperRef.current?.contains(e.target)) {
+        setSelected(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   useEffect(() => {
     setPosition(pos);
@@ -19,6 +35,7 @@ const DraggableEditableText = ({
 
   const handleMouseDown = (e) => {
     if (editing) return;
+    setSelected(true);
     start.current = { x: e.clientX - position.x, y: e.clientY - position.y };
     const handleMouseMove = (e2) => {
       const newPos = {
@@ -40,8 +57,13 @@ const DraggableEditableText = ({
 
   return (
     <span
+      ref={wrapperRef}
       onMouseDown={handleMouseDown}
-      onDoubleClick={() => setEditing(true)}
+      onClick={() => setSelected(true)}
+      onDoubleClick={() => {
+        setEditing(true);
+        setSelected(true);
+      }}
       style={{
         position: 'absolute',
         left: centerX ? position.x : isDefault ? '50%' : position.x,
@@ -56,18 +78,41 @@ const DraggableEditableText = ({
         cursor: editing ? 'text' : 'move',
         ...style,
       }}
-      className={className}
+      className={`${className} relative ${selected ? 'outline outline-1 outline-dashed outline-blue-500' : ''}`}
     >
       {editing ? (
         <input
           value={text}
+          placeholder={placeholder}
           autoFocus
           onChange={(e) => onChange(e.target.value)}
           onBlur={() => setEditing(false)}
           className="border border-gray-300 rounded px-1"
         />
       ) : (
-        text
+        text || (!touched && placeholder)
+      )}
+      {selected && !editing && (
+        <span className="absolute -top-5 right-0 flex space-x-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSizeChange?.((size || parseInt(style?.fontSize) || 0) + 2);
+            }}
+            className="bg-white border rounded text-xs px-1"
+          >
+            +
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSizeChange?.(Math.max((size || parseInt(style?.fontSize) || 0) - 2, 1));
+            }}
+            className="bg-white border rounded text-xs px-1"
+          >
+            -
+          </button>
+        </span>
       )}
     </span>
   );

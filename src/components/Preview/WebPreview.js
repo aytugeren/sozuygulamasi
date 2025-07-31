@@ -1,17 +1,26 @@
 import React from 'react';
 import DraggableEditableText from '../DraggableEditableText';
 
-const WebPreview = React.forwardRef(({
+const WebPreview = React.forwardRef(({ 
   slug,
   title,
   subtitle,
   altText,
   titleFont,
   titleColor,
+  titleSize,
   subtitleFont,
   subtitleColor,
+  subtitleSize,
   altFont,
   altColor,
+  altTextSize,
+  onTitleSizeChange,
+  onSubtitleSizeChange,
+  onAltTextSizeChange,
+  titleTouched,
+  subtitleTouched,
+  altTextTouched,
   onTitleChange,
   onSubtitleChange,
   onAltTextChange,
@@ -33,28 +42,40 @@ const WebPreview = React.forwardRef(({
     </div>
     <div className="flex-1 flex flex-col items-center justify-center text-center px-10 relative">
       <DraggableEditableText
-        text={subtitle || 'Sözümüze Hoşgeldiniz...'}
+        text={subtitle}
+        placeholder="Sözümüze Hoşgeldiniz..."
+        touched={subtitleTouched}
         onChange={onSubtitleChange}
-        className={`italic text-xl mb-4 ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
-        style={{ color: subtitleColor }}
+        className={`italic mb-4 ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
+        style={{ color: subtitleColor, fontSize: subtitleSize }}
+        size={subtitleSize}
+        onSizeChange={onSubtitleSizeChange}
         pos={subtitlePos}
         onPosChange={onSubtitlePosChange}
         centerX
       />
       <DraggableEditableText
-        text={title || 'Burcu & Fatih'}
+        text={title}
+        placeholder="Burcu & Fatih"
+        touched={titleTouched}
         onChange={onTitleChange}
-        className={`text-5xl font-bold mb-3 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
-        style={{ color: titleColor }}
+        className={`font-bold mb-3 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
+        style={{ color: titleColor, fontSize: titleSize }}
+        size={titleSize}
+        onSizeChange={onTitleSizeChange}
         pos={titlePos}
         onPosChange={onTitlePosChange}
         centerX
       />
       <DraggableEditableText
-        text={altText || 'Bizimkisi bir aşk hikayesi..'}
+        text={altText}
+        placeholder="Bizimkisi bir aşk hikayesi.."
+        touched={altTextTouched}
         onChange={onAltTextChange}
-        className={`text-base mt-4 ${altFont ? `font-${altFont}` : 'font-sans'}`}
-        style={{ color: altColor }}
+        className={`${altFont ? `font-${altFont}` : 'font-sans'} mt-4`}
+        style={{ color: altColor, fontSize: altTextSize }}
+        size={altTextSize}
+        onSizeChange={onAltTextSizeChange}
         pos={altTextPos}
         onPosChange={onAltTextPosChange}
         centerX
