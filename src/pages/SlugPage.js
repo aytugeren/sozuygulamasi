@@ -10,6 +10,15 @@ const SlugPage = () => {
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const sectionRef = useRef(null);
+  const heroRef = useRef(null);
+  const PREVIEW_DIMENSIONS = {
+    phone: { width: 375, height: 700 },
+    web: { width: 640, height: 720 },
+  };
+  const DEFAULT_RATIOS = { title: 0.43, subtitle: 0.29, altText: 0.57 };
+  const [scaledTitlePos, setScaledTitlePos] = useState(null);
+  const [scaledSubtitlePos, setScaledSubtitlePos] = useState(null);
+  const [scaledAltTextPos, setScaledAltTextPos] = useState(null);
 
 useEffect(() => {
   if (!slug) {
@@ -44,67 +53,73 @@ useEffect(() => {
   fetchPage();
 }, [slug]);
 
+  useEffect(() => {
+    if (!page) return;
+    const computeScaled = () => {
+      const rect = heroRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const { width, height } = rect;
+      const base = width < 500 ? PREVIEW_DIMENSIONS.phone : PREVIEW_DIMENSIONS.web;
+      const clamp = (val, max) => Math.min(Math.max(val, 0), max);
+      const scale = (pos, ratio) =>
+        pos
+          ? {
+              x: clamp((pos.x * width) / base.width, width),
+              y: clamp((pos.y * height) / base.height, height),
+            }
+          : { x: width / 2, y: height * ratio };
+      setScaledTitlePos(scale(page.titlePos, DEFAULT_RATIOS.title));
+      setScaledSubtitlePos(scale(page.subtitlePos, DEFAULT_RATIOS.subtitle));
+      setScaledAltTextPos(scale(page.altTextPos, DEFAULT_RATIOS.altText));
+    };
+    computeScaled();
+    window.addEventListener('resize', computeScaled);
+    return () => window.removeEventListener('resize', computeScaled);
+  }, [page]);
+
   if (loading) return <div className="text-center py-10">Yükleniyor...</div>;
   if (!page) return <div className="text-center py-10 text-red-600">Sayfa bulunamadı.</div>;
 
- return (
+  return (
     <div className="min-h-screen bg-white px-4 py-8">
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col justify-center items-center text-center relative">
-        {page.subtitlePos ? (
-          <p
-            className={`italic text-xl font-${page.subtitleFont} mb-4 absolute`}
-            style={{
-              color: page.subtitleColor,
-              left: page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? '50%' : page.subtitlePos.x,
-              top: page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? '50%' : page.subtitlePos.y,
-              transform:
-                page.subtitlePos.x === 0 && page.subtitlePos.y === 0 ? 'translate(-50%, -50%)' : undefined,
-            }}
-          >
-            {page.subtitle}
-          </p>
-        ) : (
-          <p className={`italic text-xl font-${page.subtitleFont} mb-4`} style={{ color: page.subtitleColor }}>
-            {page.subtitle}
-          </p>
-        )}
-        {page.titlePos ? (
-          <h1
-            className={`text-5xl font-${page.titleFont} mb-3 absolute`}
-            style={{
-              color: page.titleColor,
-              left: page.titlePos.x === 0 && page.titlePos.y === 0 ? '50%' : page.titlePos.x,
-              top: page.titlePos.x === 0 && page.titlePos.y === 0 ? '50%' : page.titlePos.y,
-              transform:
-                page.titlePos.x === 0 && page.titlePos.y === 0 ? 'translate(-50%, -50%)' : undefined,
-            }}
-          >
-            {page.title}
-          </h1>
-        ) : (
-          <h1 className={`text-5xl font-${page.titleFont} mb-3`} style={{ color: page.titleColor }}>
-            {page.title}
-          </h1>
-        )}
-        {page.altTextPos ? (
-          <p
-            className={`text-base font-${page.altFont} mt-4 absolute`}
-            style={{
-              color: page.altColor,
-              left: page.altTextPos.x === 0 && page.altTextPos.y === 0 ? '50%' : page.altTextPos.x,
-              top: page.altTextPos.x === 0 && page.altTextPos.y === 0 ? '50%' : page.altTextPos.y,
-              transform:
-                page.altTextPos.x === 0 && page.altTextPos.y === 0 ? 'translate(-50%, -50%)' : undefined,
-            }}
-          >
-            {page.altText}
-          </p>
-        ) : (
-          <p className={`text-base font-${page.altFont} mt-4`} style={{ color: page.altColor }}>
-            {page.altText}
-          </p>
-        )}
+      <section
+        ref={heroRef}
+        className="min-h-screen flex flex-col justify-center items-center text-center relative"
+      >
+        <p
+          className={`italic text-xl font-${page.subtitleFont} mb-4 absolute`}
+          style={{
+            color: page.subtitleColor,
+            left: scaledSubtitlePos?.x,
+            top: scaledSubtitlePos?.y,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {page.subtitle}
+        </p>
+        <h1
+          className={`text-5xl font-${page.titleFont} mb-3 absolute`}
+          style={{
+            color: page.titleColor,
+            left: scaledTitlePos?.x,
+            top: scaledTitlePos?.y,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {page.title}
+        </h1>
+        <p
+          className={`text-base font-${page.altFont} mt-4 absolute`}
+          style={{
+            color: page.altColor,
+            left: scaledAltTextPos?.x,
+            top: scaledAltTextPos?.y,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {page.altText}
+        </p>
 
         {/* Scroll down arrow */}
         <button

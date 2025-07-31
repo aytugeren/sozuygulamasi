@@ -41,6 +41,18 @@ const HeroPage = () => {
   const [subtitleColor, setSubtitleColor] = useState('#555555');
   const [altFont, setAltFont] = useState('modern');
   const [altColor, setAltColor] = useState('#888888');
+  const previewRef = useRef(null);
+  const DEFAULT_RATIOS = {
+    title: 0.43,
+    subtitle: 0.29,
+    altText: 0.57,
+  };
+  const defaultPositions = useRef({
+    title: { x: 0, y: 0 },
+    subtitle: { x: 0, y: 0 },
+    altText: { x: 0, y: 0 },
+  });
+
   const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
   const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
   const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
@@ -61,18 +73,43 @@ const HeroPage = () => {
     if (prevType === previewType) return;
     const prevDim = PREVIEW_DIMENSIONS[prevType];
     const nextDim = PREVIEW_DIMENSIONS[previewType];
+    const clamp = (val, max) => Math.min(Math.max(val, 0), max);
     const scale = (pos) =>
       pos.x === 0 && pos.y === 0
         ? pos
         : {
-            x: (pos.x * nextDim.width) / prevDim.width,
-            y: (pos.y * nextDim.height) / prevDim.height,
+            x: clamp((pos.x * nextDim.width) / prevDim.width, nextDim.width),
+            y: clamp((pos.y * nextDim.height) / prevDim.height, nextDim.height),
           };
     setTitlePos((p) => scale(p));
     setSubtitlePos((p) => scale(p));
     setAltTextPos((p) => scale(p));
     prevPreviewTypeRef.current = previewType;
   }, [previewType]);
+
+  useEffect(() => {
+    if (!showModal) return;
+    const computeDefaults = () => {
+      const rect = previewRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const { width, height } = rect;
+      const updated = {
+        title: { x: width / 2, y: height * DEFAULT_RATIOS.title },
+        subtitle: { x: width / 2, y: height * DEFAULT_RATIOS.subtitle },
+        altText: { x: width / 2, y: height * DEFAULT_RATIOS.altText },
+      };
+      defaultPositions.current = updated;
+      setTitlePos(updated.title);
+      setSubtitlePos(updated.subtitle);
+      setAltTextPos(updated.altText);
+    };
+    const id = requestAnimationFrame(computeDefaults);
+    window.addEventListener('resize', computeDefaults);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('resize', computeDefaults);
+    };
+  }, [showModal]);
 
 
   useEffect(() => {
@@ -222,9 +259,9 @@ const HeroPage = () => {
     setSubtitleColor('#555555');
     setAltFont('sans');
     setAltColor('#888888');
-    setTitlePos({ x: 0, y: 0 });
-    setSubtitlePos({ x: 0, y: 0 });
-    setAltTextPos({ x: 0, y: 0 });
+    setTitlePos(defaultPositions.current.title);
+    setSubtitlePos(defaultPositions.current.subtitle);
+    setAltTextPos(defaultPositions.current.altText);
   };
 
   const handleShare = async () => {
@@ -333,6 +370,7 @@ const HeroPage = () => {
           </div>
           {previewType === 'phone' ? (
             <PhonePreview
+              ref={previewRef}
               slug={slug}
               title={title}
               subtitle={subtitle}
@@ -354,7 +392,8 @@ const HeroPage = () => {
               onAltTextPosChange={setAltTextPos}
             />
           ) : (
-            <WebPreview
+          <WebPreview
+              ref={previewRef}
               slug={slug}
               title={title}
               subtitle={subtitle}
@@ -376,6 +415,16 @@ const HeroPage = () => {
               onAltTextPosChange={setAltTextPos}
             />
           )}
+          <button
+            onClick={() => {
+              setTitlePos(defaultPositions.current.title);
+              setSubtitlePos(defaultPositions.current.subtitle);
+              setAltTextPos(defaultPositions.current.altText);
+            }}
+            className="mt-2 mb-4 bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded"
+          >
+            Konumları Sıfırla
+          </button>
         </div>
 
         {/* Form - Mobilde Altta, Masaüstünde Solda */}
