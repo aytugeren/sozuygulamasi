@@ -1,5 +1,5 @@
 // filepath: [HeroPage.js](http://_vscodecontentref_/0)
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../databases/firebase';
 import { 
@@ -44,11 +44,35 @@ const HeroPage = () => {
   const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
   const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
   const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
-  
+
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
   const [createdPageUrl, setCreatedPageUrl] = useState('');
   const [previewType, setPreviewType] = useState('phone');
+  const prevPreviewTypeRef = useRef('phone');
+
+  const PREVIEW_DIMENSIONS = {
+    phone: { width: 375, height: 700 },
+    web: { width: 640, height: 720 },
+  };
+
+  useEffect(() => {
+    const prevType = prevPreviewTypeRef.current;
+    if (prevType === previewType) return;
+    const prevDim = PREVIEW_DIMENSIONS[prevType];
+    const nextDim = PREVIEW_DIMENSIONS[previewType];
+    const scale = (pos) =>
+      pos.x === 0 && pos.y === 0
+        ? pos
+        : {
+            x: (pos.x * nextDim.width) / prevDim.width,
+            y: (pos.y * nextDim.height) / prevDim.height,
+          };
+    setTitlePos((p) => scale(p));
+    setSubtitlePos((p) => scale(p));
+    setAltTextPos((p) => scale(p));
+    prevPreviewTypeRef.current = previewType;
+  }, [previewType]);
 
 
   useEffect(() => {
