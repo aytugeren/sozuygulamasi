@@ -39,6 +39,7 @@ const WebPreview = React.forwardRef(({
         style={{ color: subtitleColor }}
         pos={subtitlePos}
         onPosChange={onSubtitlePosChange}
+        centerX
       />
       <DraggableEditableText
         text={title || 'Burcu & Fatih'}
@@ -47,6 +48,7 @@ const WebPreview = React.forwardRef(({
         style={{ color: titleColor }}
         pos={titlePos}
         onPosChange={onTitlePosChange}
+        centerX
       />
       <DraggableEditableText
         text={altText || 'Bizimkisi bir aşk hikayesi..'}
@@ -55,6 +57,7 @@ const WebPreview = React.forwardRef(({
         style={{ color: altColor }}
         pos={altTextPos}
         onPosChange={onAltTextPosChange}
+        centerX
       />
       <svg
         className="w-8 h-8 text-gray-500 absolute bottom-4 animate-bounce"

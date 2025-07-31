@@ -32,6 +32,7 @@ const PhonePreview = React.forwardRef(({
           style={{ color: subtitleColor }}
           pos={subtitlePos}
           onPosChange={onSubtitlePosChange}
+          centerX
         />
         <DraggableEditableText
           text={title || 'Burcu & Fatih'}
@@ -40,6 +41,7 @@ const PhonePreview = React.forwardRef(({
           style={{ color: titleColor }}
           pos={titlePos}
           onPosChange={onTitlePosChange}
+          centerX
         />
         <DraggableEditableText
           text={altText || 'Bizimkisi bir aşk hikayesi..'}
@@ -48,6 +50,7 @@ const PhonePreview = React.forwardRef(({
           style={{ color: altColor }}
           pos={altTextPos}
           onPosChange={onAltTextPosChange}
+          centerX
         />
       </div>
       <div className="p-4 text-center border-t">
