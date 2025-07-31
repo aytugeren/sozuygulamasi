@@ -1,7 +1,7 @@
 import React from 'react';
 import DraggableEditableText from '../DraggableEditableText';
 
-const PhonePreview = ({
+const PhonePreview = React.forwardRef(({
   slug,
   title,
   subtitle,
@@ -21,8 +21,8 @@ const PhonePreview = ({
   onTitlePosChange,
   onSubtitlePosChange,
   onAltTextPosChange,
-}) => (
-  <div className="block w-full max-w-[375px] h-[700px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white relative">
+}, ref) => (
+  <div ref={ref} className="block w-full max-w-[375px] h-[700px] bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-white relative">
     <div className="h-full flex flex-col">
       <div className="flex-1 p-8 flex flex-col items-center justify-center text-center relative">
         <DraggableEditableText
@@ -32,6 +32,7 @@ const PhonePreview = ({
           style={{ color: subtitleColor }}
           pos={subtitlePos}
           onPosChange={onSubtitlePosChange}
+          centerX
         />
         <DraggableEditableText
           text={title || 'Burcu & Fatih'}
@@ -40,6 +41,7 @@ const PhonePreview = ({
           style={{ color: titleColor }}
           pos={titlePos}
           onPosChange={onTitlePosChange}
+          centerX
         />
         <DraggableEditableText
           text={altText || 'Bizimkisi bir aşk hikayesi..'}
@@ -48,6 +50,7 @@ const PhonePreview = ({
           style={{ color: altColor }}
           pos={altTextPos}
           onPosChange={onAltTextPosChange}
+          centerX
         />
       </div>
       <div className="p-4 text-center border-t">
@@ -57,6 +60,6 @@ const PhonePreview = ({
       </div>
     </div>
   </div>
-);
+));
 
 export default PhonePreview;
