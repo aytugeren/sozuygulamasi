@@ -15,6 +15,9 @@ const WebPreview = React.forwardRef(({
   altFont,
   altColor,
   altTextSize,
+  onTitleSizeChange,
+  onSubtitleSizeChange,
+  onAltTextSizeChange,
   titleTouched,
   subtitleTouched,
   altTextTouched,
@@ -45,6 +48,8 @@ const WebPreview = React.forwardRef(({
         onChange={onSubtitleChange}
         className={`italic mb-4 ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
         style={{ color: subtitleColor, fontSize: subtitleSize }}
+        size={subtitleSize}
+        onSizeChange={onSubtitleSizeChange}
         pos={subtitlePos}
         onPosChange={onSubtitlePosChange}
         centerX
@@ -56,6 +61,8 @@ const WebPreview = React.forwardRef(({
         onChange={onTitleChange}
         className={`font-bold mb-3 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
         style={{ color: titleColor, fontSize: titleSize }}
+        size={titleSize}
+        onSizeChange={onTitleSizeChange}
         pos={titlePos}
         onPosChange={onTitlePosChange}
         centerX
@@ -67,6 +74,8 @@ const WebPreview = React.forwardRef(({
         onChange={onAltTextChange}
         className={`${altFont ? `font-${altFont}` : 'font-sans'} mt-4`}
         style={{ color: altColor, fontSize: altTextSize }}
+        size={altTextSize}
+        onSizeChange={onAltTextSizeChange}
         pos={altTextPos}
         onPosChange={onAltTextPosChange}
         centerX

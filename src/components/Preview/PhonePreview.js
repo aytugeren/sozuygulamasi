@@ -15,6 +15,9 @@ const PhonePreview = React.forwardRef(({
   altFont,
   altColor,
   altTextSize,
+  onTitleSizeChange,
+  onSubtitleSizeChange,
+  onAltTextSizeChange,
   titleTouched,
   subtitleTouched,
   altTextTouched,
@@ -38,6 +41,8 @@ const PhonePreview = React.forwardRef(({
           onChange={onSubtitleChange}
           className={`mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
           style={{ color: subtitleColor, fontSize: subtitleSize }}
+          size={subtitleSize}
+          onSizeChange={onSubtitleSizeChange}
           pos={subtitlePos}
           onPosChange={onSubtitlePosChange}
           centerX
@@ -49,6 +54,8 @@ const PhonePreview = React.forwardRef(({
           onChange={onTitleChange}
           className={`font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
           style={{ color: titleColor, fontSize: titleSize }}
+          size={titleSize}
+          onSizeChange={onTitleSizeChange}
           pos={titlePos}
           onPosChange={onTitlePosChange}
           centerX
@@ -60,6 +67,8 @@ const PhonePreview = React.forwardRef(({
           onChange={onAltTextChange}
           className={`${altFont ? `font-${altFont}` : 'font-sans'} mb-8`}
           style={{ color: altColor, fontSize: altTextSize }}
+          size={altTextSize}
+          onSizeChange={onAltTextSizeChange}
           pos={altTextPos}
           onPosChange={onAltTextPosChange}
           centerX

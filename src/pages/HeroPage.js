@@ -399,6 +399,9 @@ const HeroPage = () => {
               altFont={altFont}
               altColor={altColor}
               altTextSize={altTextSize}
+              onTitleSizeChange={setTitleSize}
+              onSubtitleSizeChange={setSubtitleSize}
+              onAltTextSizeChange={setAltTextSize}
               titleTouched={titleTouched}
               subtitleTouched={subtitleTouched}
               altTextTouched={altTextTouched}
@@ -428,6 +431,9 @@ const HeroPage = () => {
               altFont={altFont}
               altColor={altColor}
               altTextSize={altTextSize}
+              onTitleSizeChange={setTitleSize}
+              onSubtitleSizeChange={setSubtitleSize}
+              onAltTextSizeChange={setAltTextSize}
               titleTouched={titleTouched}
               subtitleTouched={subtitleTouched}
               altTextTouched={altTextTouched}
