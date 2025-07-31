@@ -29,11 +29,17 @@ const DashboardPage = () => {
   const [pages, setPages] = useState([]);
   const [titleFont, setTitleFont] = useState('romantic');
   const [titleColor, setTitleColor] = useState('#333333');
+  const [titleSize, setTitleSize] = useState(48);
+  const [titleTouched, setTitleTouched] = useState(false);
   const [subtitleFont, setSubtitleFont] = useState('sans');
   const [subtitleColor, setSubtitleColor] = useState('#555555');
+  const [subtitleSize, setSubtitleSize] = useState(24);
+  const [subtitleTouched, setSubtitleTouched] = useState(false);
   const [altText, setAltText] = useState('');
   const [altFont, setAltFont] = useState('sans');
   const [altColor, setAltColor] = useState('#888888');
+  const [altTextSize, setAltTextSize] = useState(16);
+  const [altTextTouched, setAltTextTouched] = useState(false);
   const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
   const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
   const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
@@ -200,11 +206,14 @@ const deleteCollection = async (collectionRef) => {
       subtitle,
       titleFont,
       titleColor,
+      titleSize,
       subtitleFont,
       subtitleColor,
+      subtitleSize,
       altText,
       altFont,
       altColor,
+      altTextSize,
       titlePos,
       subtitlePos,
       altTextPos,
@@ -216,24 +225,36 @@ const deleteCollection = async (collectionRef) => {
     await fetchUserPages();
     setSlug('');
     setTitle('');
+    setTitleTouched(false);
+    setTitleSize(48);
     setSubtitle('');
+    setSubtitleTouched(false);
+    setSubtitleSize(24);
     setTitlePos(defaultPositions.current.title);
     setSubtitlePos(defaultPositions.current.subtitle);
     setAltTextPos(defaultPositions.current.altText);
     setVideoLink('');
     setAltText('');
+    setAltTextTouched(false);
+    setAltTextSize(16);
   };
 
   const handleCancelEdit = () => {
     setEditingSlug(null);
     setSlug('');
     setTitle('');
+    setTitleTouched(false);
+    setTitleSize(48);
     setSubtitle('');
+    setSubtitleTouched(false);
+    setSubtitleSize(24);
     setTitlePos(defaultPositions.current.title);
     setSubtitlePos(defaultPositions.current.subtitle);
     setAltTextPos(defaultPositions.current.altText);
     setVideoLink('');
     setAltText('');
+    setAltTextTouched(false);
+    setAltTextSize(16);
   };
 
   const handleLogout = async () => {
@@ -306,13 +327,19 @@ const deleteCollection = async (collectionRef) => {
               altText={altText}
               titleFont={titleFont}
               titleColor={titleColor}
+              titleSize={titleSize}
               subtitleFont={subtitleFont}
               subtitleColor={subtitleColor}
+              subtitleSize={subtitleSize}
               altFont={altFont}
               altColor={altColor}
-              onTitleChange={setTitle}
-              onSubtitleChange={setSubtitle}
-              onAltTextChange={setAltText}
+              altTextSize={altTextSize}
+              titleTouched={titleTouched}
+              subtitleTouched={subtitleTouched}
+              altTextTouched={altTextTouched}
+              onTitleChange={(v) => { setTitle(v); setTitleTouched(true); }}
+              onSubtitleChange={(v) => { setSubtitle(v); setSubtitleTouched(true); }}
+              onAltTextChange={(v) => { setAltText(v); setAltTextTouched(true); }}
               titlePos={titlePos}
               subtitlePos={subtitlePos}
               altTextPos={altTextPos}
@@ -329,13 +356,19 @@ const deleteCollection = async (collectionRef) => {
               altText={altText}
               titleFont={titleFont}
               titleColor={titleColor}
+              titleSize={titleSize}
               subtitleFont={subtitleFont}
               subtitleColor={subtitleColor}
+              subtitleSize={subtitleSize}
               altFont={altFont}
               altColor={altColor}
-              onTitleChange={setTitle}
-              onSubtitleChange={setSubtitle}
-              onAltTextChange={setAltText}
+              altTextSize={altTextSize}
+              titleTouched={titleTouched}
+              subtitleTouched={subtitleTouched}
+              altTextTouched={altTextTouched}
+              onTitleChange={(v) => { setTitle(v); setTitleTouched(true); }}
+              onSubtitleChange={(v) => { setSubtitle(v); setSubtitleTouched(true); }}
+              onAltTextChange={(v) => { setAltText(v); setAltTextTouched(true); }}
               titlePos={titlePos}
               subtitlePos={subtitlePos}
               altTextPos={altTextPos}
@@ -380,7 +413,10 @@ const deleteCollection = async (collectionRef) => {
           <input
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setTitleTouched(true);
+            }}
             className="w-full border px-4 py-2 rounded"
             placeholder="Burcu & Fatih"
           />
@@ -416,13 +452,25 @@ const deleteCollection = async (collectionRef) => {
           <label className="block mb-1">🎨 Başlık Rengi</label>
           <input type="color" value={titleColor} onChange={(e) => setTitleColor(e.target.value)} className="w-16 h-10" />
         </div>
+        <div>
+          <label className="block mb-1">🔠 Başlık Boyutu</label>
+          <input
+            type="number"
+            value={titleSize}
+            onChange={(e) => setTitleSize(parseInt(e.target.value) || 0)}
+            className="w-full border px-4 py-2 rounded"
+          />
+        </div>
 
         <div>
           <label className="block mb-1">💬 Alt Mesaj</label>
           <input
             type="text"
             value={subtitle}
-            onChange={(e) => setSubtitle(e.target.value)}
+            onChange={(e) => {
+              setSubtitle(e.target.value);
+              setSubtitleTouched(true);
+            }}
             className="w-full border px-4 py-2 rounded"
             placeholder="Sözümüze hoşgeldiniz.."
           />
@@ -459,11 +507,23 @@ const deleteCollection = async (collectionRef) => {
           <input type="color" value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} className="w-16 h-10" />
         </div>
         <div>
+          <label className="block mb-1">🔠 Alt Mesaj Boyutu</label>
+          <input
+            type="number"
+            value={subtitleSize}
+            onChange={(e) => setSubtitleSize(parseInt(e.target.value) || 0)}
+            className="w-full border px-4 py-2 rounded"
+          />
+        </div>
+        <div>
           <label className="block mb-1">📍 Ek Açıklama (altText)</label>
           <input
             type="text"
             value={altText}
-            onChange={(e) => setAltText(e.target.value)}
+            onChange={(e) => {
+              setAltText(e.target.value);
+              setAltTextTouched(true);
+            }}
             className="w-full border px-4 py-2 rounded"
             placeholder="Örn: 14 Temmuz 2025, İstanbul"
           />
@@ -506,6 +566,15 @@ const deleteCollection = async (collectionRef) => {
             value={altColor}
             onChange={(e) => setAltColor(e.target.value)}
             className="w-16 h-10"
+          />
+        </div>
+        <div>
+          <label className="block mb-1">🔠 Alt Yazı Boyutu</label>
+          <input
+            type="number"
+            value={altTextSize}
+            onChange={(e) => setAltTextSize(parseInt(e.target.value) || 0)}
+            className="w-full border px-4 py-2 rounded"
           />
         </div>
         <div>
@@ -560,12 +629,18 @@ const deleteCollection = async (collectionRef) => {
                     setAltFont(p.altFont || 'sans');
                     setTitleFont(p.titleFont || 'romantic');
                     setTitleColor(p.titleColor || '#333333');
+                    setTitleSize(p.titleSize || 48);
+                    setTitleTouched(true);
                     setTitle(p.title || '');
                     setSubtitle(p.subtitle || '');
+                    setSubtitleTouched(true);
                     setSubtitleColor(p.subtitleColor || '#555555');
                     setSubtitleFont(p.subtitleFont || 'sans');
+                    setSubtitleSize(p.subtitleSize || 24);
                     setVideoLink(p.videoLink || '');
                     setAltText(p.altText || '');
+                    setAltTextTouched(true);
+                    setAltTextSize(p.altTextSize || 16);
                     setTitlePos(p.titlePos || defaultPositions.current.title);
                     setSubtitlePos(p.subtitlePos || defaultPositions.current.subtitle);
                     setAltTextPos(p.altTextPos || defaultPositions.current.altText);
@@ -590,7 +665,10 @@ const deleteCollection = async (collectionRef) => {
                   placeholder="Çift İsmi"
                   className="w-full border px-4 py-2 rounded"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    setTitleTouched(true);
+                  }}
                 />
                 <div>
                   <label className="block mb-1">🖋️ Başlık Fontu</label>
@@ -604,12 +682,24 @@ const deleteCollection = async (collectionRef) => {
                   <label className="block mb-1">🎨 Başlık Rengi</label>
                   <input type="color" value={titleColor} onChange={(e) => setTitleColor(e.target.value)} className="w-16 h-10" />
                 </div>
+                <div>
+                  <label className="block mb-1">🔠 Başlık Boyutu</label>
+                  <input
+                    type="number"
+                    value={titleSize}
+                    onChange={(e) => setTitleSize(parseInt(e.target.value) || 0)}
+                    className="w-full border px-4 py-2 rounded"
+                  />
+                </div>
                 <input
                   type="text"
                   placeholder="Alt Mesaj"
                   className="w-full border px-4 py-2 rounded"
                   value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value)}
+                  onChange={(e) => {
+                    setSubtitle(e.target.value);
+                    setSubtitleTouched(true);
+                  }}
                 />
                 <div>
                   <label className="block mb-1">🖋️ Alt Yazı Fontu</label>
@@ -623,13 +713,25 @@ const deleteCollection = async (collectionRef) => {
                   <label className="block mb-1">🎨 Alt Yazı Rengi</label>
                   <input type="color" value={subtitleColor} onChange={(e) => setSubtitleColor(e.target.value)} className="w-16 h-10" />
                 </div>
+                <div>
+                  <label className="block mb-1">🔠 Alt Mesaj Boyutu</label>
+                  <input
+                    type="number"
+                    value={subtitleSize}
+                    onChange={(e) => setSubtitleSize(parseInt(e.target.value) || 0)}
+                    className="w-full border px-4 py-2 rounded"
+                  />
+                </div>
 
                 <div>
                   <label className="block mb-1">📍 Ek Açıklama (altText)</label>
                   <input
                     type="text"
                     value={altText}
-                    onChange={(e) => setAltText(e.target.value)}
+                    onChange={(e) => {
+                      setAltText(e.target.value);
+                      setAltTextTouched(true);
+                    }}
                     className="w-full border px-4 py-2 rounded"
                     placeholder="Örn: 14 Temmuz 2025, İstanbul"
                   />
@@ -658,6 +760,15 @@ const deleteCollection = async (collectionRef) => {
                   />
                 </div>
                 <div>
+                  <label className="block mb-1">🔠 Alt Yazı Boyutu</label>
+                  <input
+                    type="number"
+                    value={altTextSize}
+                    onChange={(e) => setAltTextSize(parseInt(e.target.value) || 0)}
+                    className="w-full border px-4 py-2 rounded"
+                  />
+                </div>
+                <div>
                   <label className="block mb-1">🎥 Video Linki</label>
                 <input
                   type="text"
@@ -676,11 +787,14 @@ const deleteCollection = async (collectionRef) => {
                       subtitle,
                       titleFont,
                       titleColor,
+                      titleSize,
                       subtitleFont,
                       subtitleColor,
+                      subtitleSize,
                       altText,
                       altFont,
                       altColor,
+                      altTextSize,
                       titlePos,
                       subtitlePos,
                       altTextPos,

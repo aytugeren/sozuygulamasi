@@ -89,9 +89,10 @@ useEffect(() => {
         className="min-h-screen flex flex-col justify-center items-center text-center relative"
       >
         <p
-          className={`italic text-xl font-${page.subtitleFont} mb-4 absolute`}
+          className={`italic font-${page.subtitleFont} mb-4 absolute`}
           style={{
             color: page.subtitleColor,
+            fontSize: page.subtitleSize || 24,
             left: scaledSubtitlePos?.x,
             top: scaledSubtitlePos?.y,
             transform: 'translateX(-50%)',
@@ -100,9 +101,10 @@ useEffect(() => {
           {page.subtitle}
         </p>
         <h1
-          className={`text-5xl font-${page.titleFont} mb-3 absolute`}
+          className={`font-${page.titleFont} mb-3 absolute`}
           style={{
             color: page.titleColor,
+            fontSize: page.titleSize || 48,
             left: scaledTitlePos?.x,
             top: scaledTitlePos?.y,
             transform: 'translateX(-50%)',
@@ -111,9 +113,10 @@ useEffect(() => {
           {page.title}
         </h1>
         <p
-          className={`text-base font-${page.altFont} mt-4 absolute`}
+          className={`font-${page.altFont} mt-4 absolute`}
           style={{
             color: page.altColor,
+            fontSize: page.altTextSize || 16,
             left: scaledAltTextPos?.x,
             top: scaledAltTextPos?.y,
             transform: 'translateX(-50%)',

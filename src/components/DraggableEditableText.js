@@ -8,6 +8,8 @@ const DraggableEditableText = ({
   pos = { x: 0, y: 0 },
   onPosChange,
   centerX = false,
+  placeholder = '',
+  touched = false,
 }) => {
   const [editing, setEditing] = useState(false);
   const [position, setPosition] = useState(pos);
@@ -61,13 +63,14 @@ const DraggableEditableText = ({
       {editing ? (
         <input
           value={text}
+          placeholder={placeholder}
           autoFocus
           onChange={(e) => onChange(e.target.value)}
           onBlur={() => setEditing(false)}
           className="border border-gray-300 rounded px-1"
         />
       ) : (
-        text
+        text || (!touched && placeholder)
       )}
     </span>
   );

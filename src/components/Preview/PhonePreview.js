@@ -1,17 +1,23 @@
 import React from 'react';
 import DraggableEditableText from '../DraggableEditableText';
 
-const PhonePreview = React.forwardRef(({
+const PhonePreview = React.forwardRef(({ 
   slug,
   title,
   subtitle,
   altText,
   titleFont,
   titleColor,
+  titleSize,
   subtitleFont,
   subtitleColor,
+  subtitleSize,
   altFont,
   altColor,
+  altTextSize,
+  titleTouched,
+  subtitleTouched,
+  altTextTouched,
   onTitleChange,
   onSubtitleChange,
   onAltTextChange,
@@ -26,28 +32,34 @@ const PhonePreview = React.forwardRef(({
     <div className="h-full flex flex-col">
       <div className="flex-1 p-8 flex flex-col items-center justify-center text-center relative">
         <DraggableEditableText
-          text={subtitle || 'Sözümüze Hoşgeldiniz...'}
+          text={subtitle}
+          placeholder="Sözümüze Hoşgeldiniz..."
+          touched={subtitleTouched}
           onChange={onSubtitleChange}
-          className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
-          style={{ color: subtitleColor }}
+          className={`mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
+          style={{ color: subtitleColor, fontSize: subtitleSize }}
           pos={subtitlePos}
           onPosChange={onSubtitlePosChange}
           centerX
         />
         <DraggableEditableText
-          text={title || 'Burcu & Fatih'}
+          text={title}
+          placeholder="Burcu & Fatih"
+          touched={titleTouched}
           onChange={onTitleChange}
-          className={`text-3xl font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
-          style={{ color: titleColor }}
+          className={`font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
+          style={{ color: titleColor, fontSize: titleSize }}
           pos={titlePos}
           onPosChange={onTitlePosChange}
           centerX
         />
         <DraggableEditableText
-          text={altText || 'Bizimkisi bir aşk hikayesi..'}
+          text={altText}
+          placeholder="Bizimkisi bir aşk hikayesi.."
+          touched={altTextTouched}
           onChange={onAltTextChange}
-          className={`text-sm mb-8 ${altFont ? `font-${altFont}` : 'font-sans'}`}
-          style={{ color: altColor }}
+          className={`${altFont ? `font-${altFont}` : 'font-sans'} mb-8`}
+          style={{ color: altColor, fontSize: altTextSize }}
           pos={altTextPos}
           onPosChange={onAltTextPosChange}
           centerX
