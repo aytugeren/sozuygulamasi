@@ -43,6 +43,30 @@ const DashboardPage = () => {
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrValue, setQrValue] = useState('');
   const [previewType, setPreviewType] = useState('phone');
+  const prevPreviewTypeRef = useRef('phone');
+
+  const PREVIEW_DIMENSIONS = {
+    phone: { width: 375, height: 700 },
+    web: { width: 640, height: 720 },
+  };
+
+  useEffect(() => {
+    const prevType = prevPreviewTypeRef.current;
+    if (prevType === previewType) return;
+    const prevDim = PREVIEW_DIMENSIONS[prevType];
+    const nextDim = PREVIEW_DIMENSIONS[previewType];
+    const scale = (pos) =>
+      pos.x === 0 && pos.y === 0
+        ? pos
+        : {
+            x: (pos.x * nextDim.width) / prevDim.width,
+            y: (pos.y * nextDim.height) / prevDim.height,
+          };
+    setTitlePos((p) => scale(p));
+    setSubtitlePos((p) => scale(p));
+    setAltTextPos((p) => scale(p));
+    prevPreviewTypeRef.current = previewType;
+  }, [previewType]);
   const [updating, setUpdating] = useState(false);
 
 const qrRef = useRef(null);
