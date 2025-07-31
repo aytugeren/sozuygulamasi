@@ -224,6 +224,18 @@ const deleteCollection = async (collectionRef) => {
     setAltText('');
   };
 
+  const handleCancelEdit = () => {
+    setEditingSlug(null);
+    setSlug('');
+    setTitle('');
+    setSubtitle('');
+    setTitlePos(defaultPositions.current.title);
+    setSubtitlePos(defaultPositions.current.subtitle);
+    setAltTextPos(defaultPositions.current.altText);
+    setVideoLink('');
+    setAltText('');
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate('/auth');
@@ -683,6 +695,12 @@ const deleteCollection = async (collectionRef) => {
                   disabled={updating}
                 >
                   💾 Güncelle
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow"
+                >
+                  İptal Et
                 </button>
               </div>
             )}
