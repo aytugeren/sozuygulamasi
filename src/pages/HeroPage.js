@@ -37,10 +37,16 @@ const HeroPage = () => {
   // Font ve renk state'leri
   const [titleFont, setTitleFont] = useState('romantic');
   const [titleColor, setTitleColor] = useState('#333333');
+  const [titleSize, setTitleSize] = useState(48);
+  const [titleTouched, setTitleTouched] = useState(false);
   const [subtitleFont, setSubtitleFont] = useState('modern');
   const [subtitleColor, setSubtitleColor] = useState('#555555');
+  const [subtitleSize, setSubtitleSize] = useState(24);
+  const [subtitleTouched, setSubtitleTouched] = useState(false);
   const [altFont, setAltFont] = useState('modern');
   const [altColor, setAltColor] = useState('#888888');
+  const [altTextSize, setAltTextSize] = useState(16);
+  const [altTextTouched, setAltTextTouched] = useState(false);
   const previewRef = useRef(null);
   const DEFAULT_RATIOS = {
     title: 0.43,
@@ -213,10 +219,13 @@ const HeroPage = () => {
         createdAt: new Date(),
         titleFont,
         titleColor,
+        titleSize,
         subtitleFont,
         subtitleColor,
+        subtitleSize,
         altFont,
         altColor,
+        altTextSize,
         titlePos,
         subtitlePos,
         altTextPos
@@ -247,8 +256,14 @@ const HeroPage = () => {
     setPassword('');
     setSlug('');
     setTitle('');
+    setTitleTouched(false);
+    setTitleSize(48);
     setSubtitle('');
+    setSubtitleTouched(false);
+    setSubtitleSize(24);
     setAltText('');
+    setAltTextTouched(false);
+    setAltTextSize(16);
     setVideoLink('');
     setSlugExists(false);
     setSlugMessage('');
@@ -377,13 +392,19 @@ const HeroPage = () => {
               altText={altText}
               titleFont={titleFont}
               titleColor={titleColor}
+              titleSize={titleSize}
               subtitleFont={subtitleFont}
               subtitleColor={subtitleColor}
+              subtitleSize={subtitleSize}
               altFont={altFont}
               altColor={altColor}
-              onTitleChange={setTitle}
-              onSubtitleChange={setSubtitle}
-              onAltTextChange={setAltText}
+              altTextSize={altTextSize}
+              titleTouched={titleTouched}
+              subtitleTouched={subtitleTouched}
+              altTextTouched={altTextTouched}
+              onTitleChange={(v) => { setTitle(v); setTitleTouched(true); }}
+              onSubtitleChange={(v) => { setSubtitle(v); setSubtitleTouched(true); }}
+              onAltTextChange={(v) => { setAltText(v); setAltTextTouched(true); }}
               titlePos={titlePos}
               subtitlePos={subtitlePos}
               altTextPos={altTextPos}
@@ -400,13 +421,19 @@ const HeroPage = () => {
               altText={altText}
               titleFont={titleFont}
               titleColor={titleColor}
+              titleSize={titleSize}
               subtitleFont={subtitleFont}
               subtitleColor={subtitleColor}
+              subtitleSize={subtitleSize}
               altFont={altFont}
               altColor={altColor}
-              onTitleChange={setTitle}
-              onSubtitleChange={setSubtitle}
-              onAltTextChange={setAltText}
+              altTextSize={altTextSize}
+              titleTouched={titleTouched}
+              subtitleTouched={subtitleTouched}
+              altTextTouched={altTextTouched}
+              onTitleChange={(v) => { setTitle(v); setTitleTouched(true); }}
+              onSubtitleChange={(v) => { setSubtitle(v); setSubtitleTouched(true); }}
+              onAltTextChange={(v) => { setAltText(v); setAltTextTouched(true); }}
               titlePos={titlePos}
               subtitlePos={subtitlePos}
               altTextPos={altTextPos}
@@ -497,7 +524,10 @@ const HeroPage = () => {
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    setTitleTouched(true);
+                  }}
                   placeholder="Burcu & Fatih"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
@@ -519,6 +549,15 @@ const HeroPage = () => {
                     className="w-full h-10 border border-gray-300 rounded-lg"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Başlık Boyutu</label>
+                  <input
+                    type="number"
+                    value={titleSize}
+                    onChange={(e) => setTitleSize(parseInt(e.target.value) || 0)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
               </div>
 
               <div>
@@ -526,7 +565,10 @@ const HeroPage = () => {
                 <input
                   type="text"
                   value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value)}
+                  onChange={(e) => {
+                    setSubtitle(e.target.value);
+                    setSubtitleTouched(true);
+                  }}
                   placeholder="Sözümüze Hoşgeldiniz..."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
@@ -548,6 +590,15 @@ const HeroPage = () => {
                     className="w-full h-10 border border-gray-300 rounded-lg"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Üst Yazı Boyutu</label>
+                  <input
+                    type="number"
+                    value={subtitleSize}
+                    onChange={(e) => setSubtitleSize(parseInt(e.target.value) || 0)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
               </div>
 
               <div>
@@ -555,7 +606,10 @@ const HeroPage = () => {
                 <input
                   type="text"
                   value={altText}
-                  onChange={(e) => setAltText(e.target.value)}
+                  onChange={(e) => {
+                    setAltText(e.target.value);
+                    setAltTextTouched(true);
+                  }}
                   placeholder="Bizimkisi bir aşk hikayesi.."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
@@ -575,6 +629,15 @@ const HeroPage = () => {
                     value={altColor}
                     onChange={(e) => setAltColor(e.target.value)}
                     className="w-full h-10 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Alt Yazı Boyutu</label>
+                  <input
+                    type="number"
+                    value={altTextSize}
+                    onChange={(e) => setAltTextSize(parseInt(e.target.value) || 0)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
               </div>
