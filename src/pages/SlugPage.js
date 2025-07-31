@@ -54,13 +54,22 @@ useEffect(() => {
         className="min-h-screen flex flex-col justify-center items-center text-center relative bg-cover bg-center"
         style={page.backgroundImage ? { backgroundImage: `url(${page.backgroundImage})` } : {}}
       >
-        <p className={`italic text-xl font-${page.subtitleFont} mb-4`} style={{ color: page.subtitleColor }}>
+        <p
+          className={`italic text-xl font-${page.subtitleFont}`}
+          style={{ color: page.subtitleColor, position: 'relative', left: page.subtitlePos?.x || 0, top: page.subtitlePos?.y || 0 }}
+        >
           {page.subtitle}
         </p>
-        <h1 className={`text-5xl font-${page.titleFont} mb-3`} style={{ color: page.titleColor }}>
+        <h1
+          className={`text-5xl font-${page.titleFont}`}
+          style={{ color: page.titleColor, position: 'relative', left: page.titlePos?.x || 0, top: page.titlePos?.y || 0 }}
+        >
           {page.title}
         </h1>
-        <p className={`text-base font-${page.altFont} mt-4`} style={{ color: page.altColor }}>
+        <p
+          className={`text-base font-${page.altFont}`}
+          style={{ color: page.altColor, position: 'relative', left: page.altPos?.x || 0, top: page.altPos?.y || 0 }}
+        >
           {page.altText}
         </p>
 

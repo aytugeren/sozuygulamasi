@@ -34,6 +34,9 @@ const DashboardPage = () => {
   const [altText, setAltText] = useState('');
   const [altFont, setAltFont] = useState('sans');
   const [altColor, setAltColor] = useState('#888888');
+  const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
+  const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
+  const [altPos, setAltPos] = useState({ x: 0, y: 0 });
   const [videoLink, setVideoLink] = useState('');
   const [backgroundImage, setBackgroundImage] = useState('');
   const [bgFile, setBgFile] = useState(null);
@@ -171,6 +174,9 @@ const deleteCollection = async (collectionRef) => {
       altText,
       altFont,
       altColor,
+      subtitlePos,
+      titlePos,
+      altPos,
       videoLink,
       backgroundImage,
       createdAt: new Date(),
@@ -181,6 +187,9 @@ const deleteCollection = async (collectionRef) => {
     setSlug('');
     setTitle('');
     setSubtitle('');
+    setSubtitlePos({ x: 0, y: 0 });
+    setTitlePos({ x: 0, y: 0 });
+    setAltPos({ x: 0, y: 0 });
     setVideoLink('');
     setBackgroundImage('');
     setBgPreview('');
@@ -455,18 +464,24 @@ const deleteCollection = async (collectionRef) => {
                   <DraggableText
                     className={`text-sm mb-8 italic ${subtitleFont ? `font-${subtitleFont}` : 'font-sans'}`}
                     style={{ color: subtitleColor }}
+                    pos={subtitlePos}
+                    onPosChange={setSubtitlePos}
                   >
                     {subtitle || 'Sözümüze Hoşgeldiniz...'}
                   </DraggableText>
                   <DraggableText
                     className={`text-3xl font-bold mb-8 ${titleFont ? `font-${titleFont}` : 'font-sans'}`}
                     style={{ color: titleColor }}
+                    pos={titlePos}
+                    onPosChange={setTitlePos}
                   >
                     {title || 'Burcu & Fatih'}
                   </DraggableText>
                   <DraggableText
                     className={`text-sm mb-8 ${altFont ? `font-${altFont}` : 'font-sans'}`}
                     style={{ color: altColor }}
+                    pos={altPos}
+                    onPosChange={setAltPos}
                   >
                     {altText || 'Bizimkisi bir aşk hikayesi..'}
                   </DraggableText>
@@ -534,6 +549,9 @@ const deleteCollection = async (collectionRef) => {
                     setVideoLink(p.videoLink || '');
                     setAltText(p.altText || '');
                     setBackgroundImage(p.backgroundImage || '');
+                    setSubtitlePos(p.subtitlePos || { x: 0, y: 0 });
+                    setTitlePos(p.titlePos || { x: 0, y: 0 });
+                    setAltPos(p.altPos || { x: 0, y: 0 });
                     setBgPreview(p.backgroundImage || '');
                   }}
                   className="text-yellow-600 text-sm hover:underline"
@@ -678,6 +696,9 @@ const deleteCollection = async (collectionRef) => {
                       altText,
                       altFont,
                       altColor,
+                      subtitlePos,
+                      titlePos,
+                      altPos,
                       videoLink,
                       backgroundImage
                     });
