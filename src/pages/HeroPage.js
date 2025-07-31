@@ -239,17 +239,17 @@ const HeroPage = () => {
               Hepsi bir QR kodla sayfanızda.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-start">
+              <button
+                onClick={() => setShowModal(true)}
+                className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-600 text-white font-medium py-4 px-8 rounded-xl shadow-lg animate-bounce-slow text-lg"
+              >
+                10 Saniyede Sayfan Hazır!
+              </button>
               <a href='/mehmetayse'>
                 <button className="bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 px-6 rounded-xl shadow">
                   Demo Sayfasını Gör
                 </button>
               </a>
-              <button
-                onClick={() => setShowModal(true)}
-                className="bg-white hover:bg-gray-100 text-pink-500 font-medium py-3 px-6 rounded-xl border border-pink-500 shadow animate-pulse"
-              >
-                Hemen Başla
-              </button>
               <button
                 onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 px-6 rounded-xl shadow"
