@@ -66,6 +66,7 @@ useEffect(() => {
           ? {
               x: clamp((pos.x * width) / base.width, width),
               y: clamp((pos.y * height) / base.height, height),
+
             }
           : { x: width / 2, y: height * ratio };
       setScaledTitlePos(scale(page.titlePos, DEFAULT_RATIOS.title));
