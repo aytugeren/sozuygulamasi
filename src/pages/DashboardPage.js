@@ -224,6 +224,18 @@ const deleteCollection = async (collectionRef) => {
     setAltText('');
   };
 
+  const handleCancelEdit = () => {
+    setEditingSlug(null);
+    setSlug('');
+    setTitle('');
+    setSubtitle('');
+    setTitlePos(defaultPositions.current.title);
+    setSubtitlePos(defaultPositions.current.subtitle);
+    setAltTextPos(defaultPositions.current.altText);
+    setVideoLink('');
+    setAltText('');
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate('/auth');
@@ -344,6 +356,8 @@ const deleteCollection = async (collectionRef) => {
           </button>
         </div>
 
+        {editingSlug === null && (
+          <>
         <div>
           <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
           <input
@@ -504,13 +518,13 @@ const deleteCollection = async (collectionRef) => {
           onChange={(e) => setVideoLink(e.target.value)}
         />
         </div>
-        {editingSlug === null && (
           <button
             onClick={handleSave}
             className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded shadow"
           >
             🚀 Sayfa Kaydet
           </button>
+          </>
         )}
 
           {pages.length > 0 && (
@@ -681,6 +695,12 @@ const deleteCollection = async (collectionRef) => {
                   disabled={updating}
                 >
                   💾 Güncelle
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow"
+                >
+                  İptal Et
                 </button>
               </div>
             )}
