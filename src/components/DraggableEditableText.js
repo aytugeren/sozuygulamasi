@@ -7,6 +7,7 @@ const DraggableEditableText = ({
   style,
   pos = { x: 0, y: 0 },
   onPosChange,
+  centerX = false,
 }) => {
   const [editing, setEditing] = useState(false);
   const [position, setPosition] = useState(pos);
@@ -43,9 +44,15 @@ const DraggableEditableText = ({
       onDoubleClick={() => setEditing(true)}
       style={{
         position: 'absolute',
-        left: isDefault ? '50%' : position.x,
+        left: centerX ? position.x : isDefault ? '50%' : position.x,
         top: isDefault ? '50%' : position.y,
-        transform: isDefault ? 'translate(-50%, -50%)' : undefined,
+        transform: [
+          centerX && 'translateX(-50%)',
+          isDefault && 'translateY(-50%)',
+          !centerX && isDefault && 'translateX(-50%)',
+        ]
+          .filter(Boolean)
+          .join(' '),
         cursor: editing ? 'text' : 'move',
         ...style,
       }}
