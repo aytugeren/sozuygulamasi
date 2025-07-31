@@ -41,9 +41,15 @@ const HeroPage = () => {
   const [subtitleColor, setSubtitleColor] = useState('#555555');
   const [altFont, setAltFont] = useState('modern');
   const [altColor, setAltColor] = useState('#888888');
-  const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
-  const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
-  const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
+  const DEFAULT_POSITIONS = {
+    title: { x: 188, y: 300 },
+    subtitle: { x: 188, y: 200 },
+    altText: { x: 188, y: 400 },
+  };
+
+  const [titlePos, setTitlePos] = useState(DEFAULT_POSITIONS.title);
+  const [subtitlePos, setSubtitlePos] = useState(DEFAULT_POSITIONS.subtitle);
+  const [altTextPos, setAltTextPos] = useState(DEFAULT_POSITIONS.altText);
 
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
@@ -222,9 +228,9 @@ const HeroPage = () => {
     setSubtitleColor('#555555');
     setAltFont('sans');
     setAltColor('#888888');
-    setTitlePos({ x: 0, y: 0 });
-    setSubtitlePos({ x: 0, y: 0 });
-    setAltTextPos({ x: 0, y: 0 });
+    setTitlePos(DEFAULT_POSITIONS.title);
+    setSubtitlePos(DEFAULT_POSITIONS.subtitle);
+    setAltTextPos(DEFAULT_POSITIONS.altText);
   };
 
   const handleShare = async () => {
