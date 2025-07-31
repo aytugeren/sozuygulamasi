@@ -344,6 +344,8 @@ const deleteCollection = async (collectionRef) => {
           </button>
         </div>
 
+        {editingSlug === null && (
+          <>
         <div>
           <label className="block text-gray-700 mb-1">🔗 Sayfa Linki</label>
           <input
@@ -504,13 +506,13 @@ const deleteCollection = async (collectionRef) => {
           onChange={(e) => setVideoLink(e.target.value)}
         />
         </div>
-        {editingSlug === null && (
           <button
             onClick={handleSave}
             className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded shadow"
           >
             🚀 Sayfa Kaydet
           </button>
+          </>
         )}
 
           {pages.length > 0 && (
