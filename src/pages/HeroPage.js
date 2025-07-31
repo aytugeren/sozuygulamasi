@@ -41,15 +41,21 @@ const HeroPage = () => {
   const [subtitleColor, setSubtitleColor] = useState('#555555');
   const [altFont, setAltFont] = useState('modern');
   const [altColor, setAltColor] = useState('#888888');
-  const DEFAULT_POSITIONS = {
-    title: { x: 188, y: 300 },
-    subtitle: { x: 188, y: 200 },
-    altText: { x: 188, y: 400 },
+  const previewRef = useRef(null);
+  const DEFAULT_RATIOS = {
+    title: 0.43,
+    subtitle: 0.29,
+    altText: 0.57,
   };
+  const defaultPositions = useRef({
+    title: { x: 0, y: 0 },
+    subtitle: { x: 0, y: 0 },
+    altText: { x: 0, y: 0 },
+  });
 
-  const [titlePos, setTitlePos] = useState(DEFAULT_POSITIONS.title);
-  const [subtitlePos, setSubtitlePos] = useState(DEFAULT_POSITIONS.subtitle);
-  const [altTextPos, setAltTextPos] = useState(DEFAULT_POSITIONS.altText);
+  const [titlePos, setTitlePos] = useState({ x: 0, y: 0 });
+  const [subtitlePos, setSubtitlePos] = useState({ x: 0, y: 0 });
+  const [altTextPos, setAltTextPos] = useState({ x: 0, y: 0 });
 
   // QR Kod ve paylaşım state'leri
   const [showQRModal, setShowQRModal] = useState(false);
@@ -79,6 +85,30 @@ const HeroPage = () => {
     setAltTextPos((p) => scale(p));
     prevPreviewTypeRef.current = previewType;
   }, [previewType]);
+
+  useEffect(() => {
+    if (!showModal) return;
+    const computeDefaults = () => {
+      const rect = previewRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const { width, height } = rect;
+      const updated = {
+        title: { x: width / 2, y: height * DEFAULT_RATIOS.title },
+        subtitle: { x: width / 2, y: height * DEFAULT_RATIOS.subtitle },
+        altText: { x: width / 2, y: height * DEFAULT_RATIOS.altText },
+      };
+      defaultPositions.current = updated;
+      setTitlePos(updated.title);
+      setSubtitlePos(updated.subtitle);
+      setAltTextPos(updated.altText);
+    };
+    const id = requestAnimationFrame(computeDefaults);
+    window.addEventListener('resize', computeDefaults);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('resize', computeDefaults);
+    };
+  }, [showModal]);
 
 
   useEffect(() => {
@@ -228,9 +258,9 @@ const HeroPage = () => {
     setSubtitleColor('#555555');
     setAltFont('sans');
     setAltColor('#888888');
-    setTitlePos(DEFAULT_POSITIONS.title);
-    setSubtitlePos(DEFAULT_POSITIONS.subtitle);
-    setAltTextPos(DEFAULT_POSITIONS.altText);
+    setTitlePos(defaultPositions.current.title);
+    setSubtitlePos(defaultPositions.current.subtitle);
+    setAltTextPos(defaultPositions.current.altText);
   };
 
   const handleShare = async () => {
@@ -339,6 +369,7 @@ const HeroPage = () => {
           </div>
           {previewType === 'phone' ? (
             <PhonePreview
+              ref={previewRef}
               slug={slug}
               title={title}
               subtitle={subtitle}
@@ -361,6 +392,7 @@ const HeroPage = () => {
             />
           ) : (
             <WebPreview
+              ref={previewRef}
               slug={slug}
               title={title}
               subtitle={subtitle}
