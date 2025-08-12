@@ -246,7 +246,7 @@ const HeroPage = () => {
                 10 Saniyede Sayfan Hazır!
               </button>
               <a href='/mehmetayse'>
-                <button className="bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 px-6 rounded-xl shadow">
+                <button className="bg-pink-400 hover:bg-pink-500 text-white font-medium py-3 px-6 rounded-xl shadow">
                   Demo Sayfasını Gör
                 </button>
               </a>
